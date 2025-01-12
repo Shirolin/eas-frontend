@@ -56,7 +56,7 @@ onMounted(() => {
           </div>
           <div class="course-actions">
             <button class="details-button">查看详情</button>
-            <div v-if="isTeacher">
+            <div class="btn-group" v-if="isTeacher">
               <button class="edit-button">修改</button>
               <button class="delete-button">删除</button>
             </div>
