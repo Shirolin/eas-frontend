@@ -1,9 +1,14 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useUserStore } from '@/stores/user';
 
+const userStore = useUserStore();
 const router = useRouter();
 const welcomeMessage = ref('欢迎来到教育平台！');
+const navigateToLogin = () => {
+  router.push('/login');
+};
 const navigateToCourses = () => {
   router.push('/course');
 };
@@ -15,7 +20,8 @@ const navigateToCourses = () => {
       <div class="welcome">
         <!-- 首页内容 -->
         <p>{{ welcomeMessage }}</p>
-        <button @click="navigateToCourses" class="navigate-button">查看课程列表</button>
+        <button v-if="userStore.isAuthenticated()" @click="navigateToCourses" class="navigate-button">查看课程列表</button>
+        <button v-else @click="navigateToLogin" class="navigate-button">登录使用</button>
       </div>
     </div>
   </div>
