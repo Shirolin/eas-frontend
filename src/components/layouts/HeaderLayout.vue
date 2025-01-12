@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
-
+import { useUserStore } from '@/stores/user'
+const userStore = useUserStore()
 const isDropdownOpen = ref(false);
 const dropdownRef = ref(null);
 
@@ -13,8 +14,6 @@ const handleClickOutside = (event) => {
     isDropdownOpen.value = false;
   }
 };
-
-let isLogin = false;
 
 onMounted(() => {
   document.addEventListener('click', handleClickOutside);
@@ -31,25 +30,26 @@ onUnmounted(() => {
     </div>
     <nav class="header-nav">
       <ul>
-        <li v-if="isLogin">
+        <li v-if="userStore.isAuthenticated()">
           <router-link to="/course" class="header-text-btn">课程</router-link>
         </li>
-        <li v-if="isLogin">
+        <li v-if="userStore.isAuthenticated()">
           <router-link to="/invoice" class="header-text-btn">账单</router-link>
         </li>
-        <li v-if="!isLogin">
+        <li v-if="!userStore.isAuthenticated()">
           <router-link to="/login" href="#" class="primary-btn">登录</router-link>
         </li>
       </ul>
-      <div v-if="isLogin" class="nav-item header-dropdown" ref="dropdownRef" @click="toggleDropdown">
+      <div v-if="userStore.isAuthenticated()" class="nav-item header-dropdown" ref="dropdownRef"
+        @click="toggleDropdown">
         <span class="header-dropdown-separator">|</span>
         <a class="nav-link">
-          Shirolin
+          {{ userStore.userData.nickname }}
         </a>
         <div class="header-dropdown-content" :class="{ show: isDropdownOpen }">
           <div class="header-dropdown-content-info-item">
-            <div>shirolin@gmail.com</div>
-            <div>管理员</div>
+            <div>{{ userStore.userData.email }}</div>
+            <div>{{ userStore.userData.role_name }}</div>
           </div>
           <router-link to="/profile">个人信息</router-link>
           <router-link to="/setting">设置</router-link>

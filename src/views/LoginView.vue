@@ -23,16 +23,18 @@ const handleSubmit = async () => {
     errorMessage.value = '密码不能为空';
     return;
   }
+  console.log({
+    username: username.value,
+    password: password.value,
+  })
 
   let loginParams = {
-    email: username.value,
+    username: username.value,
     password: password.value,
   };
 
   await userStore.login(loginParams).then(() => {
     showToast('登录成功', 'success');
-  }).catch((error) => {
-    showToast('登录失败，请检查邮箱和密码是否正确', 'error');
   });
 };
 

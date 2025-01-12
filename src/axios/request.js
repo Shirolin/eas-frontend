@@ -53,8 +53,12 @@ request.interceptors.response.use(
 function handleErrorResponse(response) {
   switch (response.status) {
     case 401:
-      showToast('未授权', { type: 'error' })
-      // handleUnauthorized()
+      if (response.data.data.isLogin == true) {
+        showToast(response.data.message, 'error')
+      } else {
+        showToast('未授权', 'error')
+        handleUnauthorized()
+      }
       break
     case 404:
       showToast('请求资源不存在', { type: 'error' })
@@ -75,6 +79,7 @@ function handleErrorResponse(response) {
  * 处理未授权
  */
 function handleUnauthorized() {
+  console.log('handleUnauthorized')
   if (!store) store = useUserStore()
   store.token = null
   store.userData = {}
