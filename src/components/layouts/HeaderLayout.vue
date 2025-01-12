@@ -3,79 +3,73 @@ console.log('HeaderLayout.vue');
 </script>
 <template>
   <header>
+    <div class="logo">
+      <router-link class="link-no-style" to="/">EAS</router-link>
+    </div>
     <nav>
-      <div class="brand">Brand</div>
-      <div class="nav-links">
-        <a href="#">Landing</a>
-        <a href="#">Account</a>
-        <a href="#">Work</a>
-        <a href="#">Blog</a>
-        <div class="dropdown">
-          <a href="#">Dropdown ▼</a>
-          <div class="dropdown-content">
-            <a href="#">Link 1</a>
-            <a href="#">Link 2</a>
-            <a href="#">Link 3</a>
-          </div>
-        </div>
-        <a href="#">Log in</a>
-      </div>
+      <ul>
+        <li><a href="#">课程</a></li>
+        <li><a href="#">账单</a></li>
+        <li>
+          <router-link to="/login" href="#" class="cta-button">登录</router-link>
+        </li>
+      </ul>
     </nav>
   </header>
 </template>
 <style scoped>
-nav {
-  background-color: #f8f9fa;
-  /* 浅灰色背景，类似图片 */
-  padding: 10px 20px;
-  /* 上下 10px，左右 20px 内边距 */
+header {
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  padding: 20px;
   display: flex;
-  /* 使用 Flexbox 布局 */
-  align-items: center;
-  /* 垂直居中 */
   justify-content: space-between;
-  /* 两端对齐 */
+  align-items: center;
 }
 
-.brand {
+
+
+.logo {
   font-weight: bold;
   font-size: 1.2em;
 }
 
-.nav-links {
+nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
   display: flex;
-  gap: 20px;
-  /* 链接之间的间距 */
 }
 
-.nav-links a {
+nav li {
+  margin-left: 20px;
+}
+
+nav a {
   text-decoration: none;
-  /* 去除下划线 */
-  color: #007bff;
-  /* 蓝色链接颜色 */
+  color: #333;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: background-color 0.3s;
 }
 
-.nav-links .dropdown {
-  position: relative;
-  display: inline-block;
+nav a:hover {
+  background-color: #f0f0f0;
 }
 
-.nav-links .dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #f9f9f9;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-  z-index: 1;
-}
-
-.nav-links .dropdown-content a {
-  padding: 12px 16px;
+.cta-button {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
   text-decoration: none;
-  display: block;
+  transition: background-color 0.3s;
 }
 
-.nav-links .dropdown:hover .dropdown-content {
-  display: block;
+.cta-button:hover {
+  background-color: #0056b3;
 }
 </style>

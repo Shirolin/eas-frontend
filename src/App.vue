@@ -8,4 +8,4 @@ import ModalComponent from './components/ModalComponent.vue';
   <ModalComponent />
 </template>
 
-<style scoped></style>
+<style lang="less" src="@/assets/styles/base.less" scoped></style>

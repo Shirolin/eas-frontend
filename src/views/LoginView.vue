@@ -25,22 +25,12 @@
 </template>
 
 <style scoped>
-body {
-  font-family: sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background-color: #f5f7fa;
-  margin: 0;
-}
-
 .content {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 100vh;
+  height: 80vh;
 }
 
 .login-container {
