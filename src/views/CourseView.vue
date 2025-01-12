@@ -166,6 +166,9 @@ onMounted(() => {
   display: flex;
   justify-content: flex-end;
   margin-bottom: 1rem;
+  max-width: 40rem; // 设置最大宽度，与课程列表一致
+  margin-left: auto; // 左对齐
+  margin-right: auto; // 左对齐
 
   .create-button {
     background-color: @primary-color;
