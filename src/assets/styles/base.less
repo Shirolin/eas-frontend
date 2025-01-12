@@ -3,6 +3,7 @@
   color: inherit;
 }
 
+// button styles
 .primary-btn {
   padding: 0.5rem 1rem;
   border: none;
@@ -20,6 +21,11 @@
   background-color: @primary-color-hover;
 }
 
+.primary-btn:active {
+  background-color: @primary-color-active;
+}
+
+// container styles
 .center-content {
   display: flex;
   justify-content: center;
@@ -28,6 +34,7 @@
   height: 80vh;
 }
 
+// form styles
 .form-title {
   margin-bottom: 1rem;
   font-size: 1.5rem;
@@ -70,9 +77,54 @@
   cursor: pointer;
 }
 
+// card styles
 .card {
   padding: @card-padding;
   background-color: @card-bg-color;
   box-shadow: @card-shadow;
   border-radius: @card-radius;
+}
+
+// header styles
+.header {
+  display: flex;
+  z-index: 100;
+  padding: 1.25rem;
+  justify-content: space-between;
+  align-items: center;
+  background-color: @header-bg-color;
+  box-shadow: @header-box-shadow;
+}
+
+.header-logo {
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+.header-nav {
+  display: flex;
+  list-style: none;
+}
+
+.header-nav > ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+}
+
+.header-nav > ul > li {
+  margin-left: 1.25rem;
+}
+
+.header-text-btn {
+  text-decoration: none;
+  color: #333;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.25;
+  transition: background-color 0.3s;
+}
+
+.header-text-btn:hover {
+  background-color: #f0f0f0;
 }
