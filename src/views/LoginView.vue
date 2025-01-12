@@ -1,9 +1,11 @@
 <script setup>
 import { ref, watch } from 'vue';
+import { useToast } from '@/utils/useToast'; // 引入 useToast
 
 const username = ref('');
 const password = ref('');
 const errorMessage = ref('');
+const { showToast } = useToast(); // 使用 useToast
 
 const handleSubmit = () => {
   if (!username.value && !password.value) {
@@ -22,6 +24,8 @@ const handleSubmit = () => {
   }
 
   // ...处理登录逻辑...
+  // 登录成功
+  showToast('登录成功', 'success');
 };
 
 // 监听 username 和 password 的变化，当两者中任意一个变化时，清空 errorMessage

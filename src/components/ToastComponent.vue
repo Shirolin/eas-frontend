@@ -46,6 +46,13 @@ const show = () => {
   }, props.duration);
 };
 
+onMounted(() => {
+  icon.value = typeIconMap[props.type]; // 初始化 icon
+  if (props.message) {
+    show(); // 初始化时显示 toast
+  }
+});
+
 defineExpose({ show });
 </script>
 <template>
@@ -59,10 +66,9 @@ defineExpose({ show });
   </transition>
 </template>
 <style scoped lang="less">
-/* 样式部分与之前的代码相同 */
 .toast {
   position: fixed;
-  bottom: 2rem;
+  bottom: 10rem;
   left: 50%;
   transform: translateX(-50%);
   background-color: rgba(0, 0, 0, 0.7);
@@ -72,7 +78,7 @@ defineExpose({ show });
   z-index: 9999;
   display: flex;
   align-items: center;
-  white-space: nowrap; // 防止文字换行
+  white-space: nowrap;
 
   &.success {
     background-color: rgba(0, 128, 0, 0.7);

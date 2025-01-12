@@ -6,9 +6,9 @@ export function useToast() {
 
   const showToast = (message, type = 'info', duration = 3000) => {
     if (!toastInstance.value) {
+      const app = createApp(Toast, { message, type, duration })
       const mountNode = document.createElement('div')
       document.body.appendChild(mountNode)
-      const app = createApp(Toast, { message, type, duration })
       toastInstance.value = app.mount(mountNode)
     } else {
       toastInstance.value.message = message
