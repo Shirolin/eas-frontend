@@ -2,6 +2,7 @@ import { ref, reactive } from 'vue'
 import { defineStore } from 'pinia'
 import request from '@/axios/request.js'
 import router from '@/router/index.js'
+import { useToast } from '@/utils/useToast'
 
 export const useUserStore = defineStore(
   'user',
@@ -12,6 +13,8 @@ export const useUserStore = defineStore(
     const userData = reactive({})
     const token = ref(localStorage.getItem('token') || null)
     const isRemember = ref()
+
+    const { showToast } = useToast()
 
     // Passport 配置，从环境变量中获取
     const vite_passport_config = {
@@ -37,7 +40,7 @@ export const useUserStore = defineStore(
         }
         console.log({ msg: '登录成功', token: token.value, userData })
         setTimeout(() => {
-          router.push({ path: '/home' })
+          router.push({ path: '/' })
         }, 1000)
       }
     }
@@ -45,21 +48,10 @@ export const useUserStore = defineStore(
     // 退出登录
     async function logout() {
       try {
-        await request.post('/api/auth/logout')
-        localStorage.removeItem('token')
-        alert('退出登录成功, 现在将跳转到登录页')
-        router.push('/login')
+        await request.get('/api/auth/logout')
       } catch (error) {
-        console.log({ msg: '退出登录失败', error })
         if (error.status == 401) {
-          console.log('token已过期')
-          localStorage.removeItem('token')
-          console.log({
-            msg: 'token已过期，已清除token和用户信息',
-            token: localStorage.getItem('token'),
-            userData,
-          })
-          router.push('/login')
+          clear()
         }
       }
     }
@@ -81,6 +73,12 @@ export const useUserStore = defineStore(
       return token.value !== null
     }
 
+    // 清除用户信息和 token
+    function clear() {
+      localStorage.removeItem('token')
+      token.value = null
+    }
+
     return {
       resp_login,
       token,
@@ -91,6 +89,7 @@ export const useUserStore = defineStore(
       login,
       logout,
       isAuthenticated,
+      clear,
     }
   },
   {

@@ -2,8 +2,11 @@
 import { ref, onMounted, onUnmounted } from 'vue';
 import { useUserStore } from '@/stores/user'
 import { useModalStore } from '@/stores/modalStore';
+import { useToast } from '@/utils/useToast';
+import router from '@/router';
 const modalStore = useModalStore();
 const userStore = useUserStore()
+const { showToast } = useToast();
 const isDropdownOpen = ref(false);
 const dropdownRef = ref(null);
 
@@ -23,9 +26,12 @@ const showLogoutConfirmModal = () => {
     content: '确定要退出登录吗？',
     onConfirm: () => {
       handleLogout();
+      showToast('登出成功, 即将跳转到登录页...', 'success');
+      setTimeout(() => {
+        router.push('/login');
+      }, 3000);
     },
     onCancel: () => {
-      console.log('点击了取消')
     },
   });
 };
@@ -33,6 +39,7 @@ const showLogoutConfirmModal = () => {
 const handleLogout = async () => {
   if (userStore) {
     await userStore.logout()
+    userStore.clear()
   }
 };
 
