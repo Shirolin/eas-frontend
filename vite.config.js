@@ -22,4 +22,14 @@ export default defineConfig({
       },
     },
   },
+  server: {
+    proxy: {
+      '/api': {
+        // 匹配所有以 /api 开头的请求
+        target: 'http://127.0.0.1:8087', // 后端服务器地址
+        changeOrigin: true, // 必须设置，用于欺骗服务器请求的来源
+        // rewrite: (path) => path.replace(/^\/api/, ''), // 可选，重写路径，去掉 /api 前缀
+      },
+    },
+  },
 })
