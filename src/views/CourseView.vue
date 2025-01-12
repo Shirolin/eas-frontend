@@ -36,10 +36,10 @@ onMounted(() => {
             <h3>{{ course.name }}</h3>
             <!-- <p>{{ course.description }}</p> -->
             <div class="course-details">
-              <span>教师: {{ course.teacher }}</span>
-              <span>子课程数: {{ course.subCourses }}</span>
-              <span>学生数: {{ course.students }}</span>
-              <span>单价: {{ course.price }}</span>
+              <span>教师: {{ course.teacher_nickname }}</span>
+              <span>子课程数: {{ course.sub_courses_count }}</span>
+              <span>学生数: {{ course.students_count }}</span>
+              <span>单价: {{ course.unit_fee }}</span>
             </div>
           </div>
           <div class="course-actions">
