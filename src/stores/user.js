@@ -7,6 +7,11 @@ import { useToast } from '@/utils/useToast'
 export const useUserStore = defineStore(
   'user',
   () => {
+    // 教师常量
+    const ROLE_TEACHER = 1
+    // 学生常量
+    const ROLE_STUDENT = 2
+
     const resp_login = reactive({})
     const resp_getUserInfo = reactive({})
 
@@ -79,6 +84,16 @@ export const useUserStore = defineStore(
       token.value = null
     }
 
+    // 检查用户是否教师角色
+    function isTeacher() {
+      return userData.role === ROLE_TEACHER
+    }
+
+    // 检查用户是否学生角色
+    function isStudent() {
+      return userData.role === ROLE_STUDENT
+    }
+
     return {
       resp_login,
       token,
@@ -90,6 +105,8 @@ export const useUserStore = defineStore(
       logout,
       isAuthenticated,
       clear,
+      isTeacher,
+      isStudent,
     }
   },
   {
