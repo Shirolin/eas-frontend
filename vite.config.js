@@ -17,7 +17,8 @@ export default defineConfig({
     preprocessorOptions: {
       less: {
         javascriptEnabled: true,
-        additionalData: '@import "@/assets/styles/base.less";',
+        additionalData:
+          '@import "@/assets/styles/variables.less";@import "@/assets/styles/base.less";',
       },
     },
   },
