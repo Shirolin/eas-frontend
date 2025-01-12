@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "start": "serve dist -s -p 5173",
     "preview": "vite preview",
     "test:unit": "vitest",
     "lint:oxlint": "oxlint . --fix -D correctness --ignore-path .gitignore",
