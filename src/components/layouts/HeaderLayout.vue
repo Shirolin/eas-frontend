@@ -14,7 +14,7 @@ const handleClickOutside = (event) => {
   }
 };
 
-let isLogin = false;
+let isLogin = true;
 
 onMounted(() => {
   document.addEventListener('click', handleClickOutside);
@@ -31,10 +31,10 @@ onUnmounted(() => {
     </div>
     <nav class="header-nav">
       <ul>
-        <li>
+        <li v-if="isLogin">
           <router-link to="/course" class="header-text-btn">课程</router-link>
         </li>
-        <li>
+        <li v-if="isLogin">
           <router-link to="/invoice" class="header-text-btn">账单</router-link>
         </li>
         <li v-if="!isLogin">

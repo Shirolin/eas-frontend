@@ -18,8 +18,9 @@ const showModal = () => {
 };
 </script>
 <template>
-  <main>
-  </main>
+  <div>
+    <div class="page-title">首页</div>
+  </div>
 </template>
 <style lang="less" scoped>
 .main {

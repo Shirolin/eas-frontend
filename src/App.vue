@@ -4,8 +4,10 @@ import ModalComponent from './components/ModalComponent.vue';
 </script>
 <template>
   <HeaderLayout />
-  <RouterView />
-  <ModalComponent />
+  <main>
+    <RouterView />
+    <ModalComponent />
+  </main>
 </template>
 
 <style lang="less" src="@/assets/styles/base.less" scoped></style>
