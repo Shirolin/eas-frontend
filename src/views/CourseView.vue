@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/user'
 import { useCourseStore } from '@/stores/course';
+import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
 
 const userStore = useUserStore()
 const router = useRouter();
@@ -11,9 +12,16 @@ const isTeacher = userStore.isTeacher();
 const courseStore = useCourseStore();
 
 const { fetchCourses, goToPage } = courseStore;
+const loading = ref(false);
+
+const loadCourses = async (page) => {
+  loading.value = true;
+  await fetchCourses(page);
+  loading.value = false;
+};
 
 onMounted(() => {
-  fetchCourses();
+  loadCourses();
   console.log({
     courses: courseStore.courses,
     currentPage: courseStore.currentPage,
@@ -29,8 +37,12 @@ onMounted(() => {
       <div v-if="isTeacher" class="teacher-actions">
         <button class="create-button">创建课程</button>
       </div>
+      <!-- 加载动画 -->
+      <div v-if="loading" class="loading">
+        <LoadingSpinner />
+      </div>
       <!-- 课程列表 -->
-      <ul class="course-list" v-if="courseStore.courses.length > 0">
+      <ul class="course-list" v-else-if="courseStore.courses.length > 0">
         <li v-for="course in courseStore.courses" :key="course.id" class="course-item">
           <div class="course-info">
             <h3>{{ course.name }}</h3>
@@ -54,9 +66,9 @@ onMounted(() => {
       <div v-else class="no-courses">暂无课程</div>
       <!-- 分页控件 -->
       <div class="pagination" v-if="courseStore.courses.length > 0">
-        <button @click="goToPage(courseStore.currentPage - 1)" :disabled="courseStore.currentPage === 1">上一页</button>
+        <button @click="loadCourses(courseStore.currentPage - 1)" :disabled="courseStore.currentPage === 1">上一页</button>
         <span>第 {{ courseStore.currentPage }} 页，共 {{ courseStore.totalPages }} 页</span>
-        <button @click="goToPage(courseStore.currentPage + 1)"
+        <button @click="loadCourses(courseStore.currentPage + 1)"
           :disabled="courseStore.currentPage === courseStore.totalPages">下一页</button>
       </div>
     </div>
