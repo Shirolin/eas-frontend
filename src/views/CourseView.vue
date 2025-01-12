@@ -1,13 +1,25 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import { useUserStore } from '@/stores/user'
+import { useCourseStore } from '@/stores/course';
 
-const isTeacher = ref(true); // 假设一个变量来判断是否是教师用户
+const userStore = useUserStore()
+const router = useRouter();
+console.log(userStore.userData);
+const isTeacher = userStore.isTeacher();
+const courseStore = useCourseStore();
 
-const courses = ref([
-  { id: 1, name: '数学', description: '基础数学课程', teacher: '张老师', subCourses: 5, students: 30, price: '¥200' },
-  { id: 2, name: '物理', description: '基础物理课程', teacher: '李老师', subCourses: 3, students: 25, price: '¥180' },
-  { id: 3, name: '化学', description: '基础化学课程', teacher: '王老师', subCourses: 4, students: 20, price: '¥150' }
-]);
+const { courses, currentPage, totalPages, fetchCourses, goToPage } = courseStore;
+
+onMounted(() => {
+  fetchCourses();
+  console.log({
+    courses,
+    currentPage,
+    totalPages,
+  });
+});
 </script>
 <template>
   <div>
@@ -18,7 +30,7 @@ const courses = ref([
         <button class="create-button">创建课程</button>
       </div>
       <!-- 课程列表 -->
-      <ul class="course-list">
+      <ul class="course-list" v-if="courses.length > 0">
         <li v-for="course in courses" :key="course.id" class="course-item">
           <div class="course-info">
             <h3>{{ course.name }}</h3>
@@ -39,6 +51,13 @@ const courses = ref([
           </div>
         </li>
       </ul>
+      <div v-else class="no-courses">暂无课程</div>
+      <!-- 分页控件 -->
+      <div class="pagination" v-if="courses.length > 0">
+        <button @click="goToPage(currentPage - 1)" :disabled="currentPage === 1">上一页</button>
+        <span>第 {{ currentPage }} 页，共 {{ totalPages }} 页</span>
+        <button @click="goToPage(currentPage + 1)" :disabled="currentPage === totalPages">下一页</button>
+      </div>
     </div>
   </div>
 </template>
@@ -164,5 +183,42 @@ const courses = ref([
       background-color: @primary-color-active;
     }
   }
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+
+  button {
+    background-color: @primary-color;
+    color: @primary-color-text;
+    border: none;
+    border-radius: 0.25rem;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin: 0 0.5rem;
+
+    &:hover {
+      background-color: @primary-color-hover;
+    }
+
+    &:active {
+      background-color: @primary-color-active;
+    }
+
+    &:disabled {
+      background-color: @secondary-color;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.no-courses {
+  text-align: center;
+  color: @secondary-color-text;
+  margin-top: 2rem;
 }
 </style>
