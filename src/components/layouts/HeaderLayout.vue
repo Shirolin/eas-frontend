@@ -1,6 +1,8 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
 import { useUserStore } from '@/stores/user'
+import { useModalStore } from '@/stores/modalStore';
+const modalStore = useModalStore();
 const userStore = useUserStore()
 const isDropdownOpen = ref(false);
 const dropdownRef = ref(null);
@@ -12,6 +14,25 @@ const toggleDropdown = () => {
 const handleClickOutside = (event) => {
   if (dropdownRef.value && !dropdownRef.value.contains(event.target)) {
     isDropdownOpen.value = false;
+  }
+};
+
+const showLogoutConfirmModal = () => {
+  modalStore.show({
+    title: '提示',
+    content: '确定要退出登录吗？',
+    onConfirm: () => {
+      handleLogout();
+    },
+    onCancel: () => {
+      console.log('点击了取消')
+    },
+  });
+};
+
+const handleLogout = async () => {
+  if (userStore) {
+    await userStore.logout()
   }
 };
 
@@ -52,8 +73,7 @@ onUnmounted(() => {
             <div>{{ userStore.userData.role_name }}</div>
           </div>
           <router-link to="/profile">个人信息</router-link>
-          <router-link to="/setting">设置</router-link>
-          <router-link to="/logout">退出</router-link>
+          <a href="#" @click="showLogoutConfirmModal">退出</a>
         </div>
       </div>
     </nav>
