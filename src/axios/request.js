@@ -1,6 +1,9 @@
 import axios from 'axios'
 import router from '@/router/index.js'
 import { useUserStore } from '@/stores/user'
+import { useToast } from '@/utils/useToast'
+
+const { showToast } = useToast() // 使用 useToast
 
 // 创建axios实例
 const request = axios.create({
@@ -50,21 +53,21 @@ request.interceptors.response.use(
 function handleErrorResponse(response) {
   switch (response.status) {
     case 401:
-      alert('登录已过期，请重新登录')
+      showToast('未授权', { type: 'error' })
       // handleUnauthorized()
       break
     case 404:
-      router.push('/notFound')
+      showToast('请求资源不存在', { type: 'error' })
       break
     case 500:
-      alert('服务器异常')
+      showToast('服务器异常', { type: 'error' })
       break
     default:
       console.error({
         msg: '[响应拦截器]服务器异常',
         error: response,
       })
-      alert('服务器异常')
+      showToast('服务器异常', { type: 'error' })
   }
 }
 

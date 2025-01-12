@@ -33,11 +33,6 @@ const router = createRouter({
       name: 'invoice',
       component: InvoiceView,
     },
-    {
-      path: '/:pathMatch(.*)*',
-      name: 'not-found',
-      redirect: { name: 'home' },
-    },
   ],
 })
 

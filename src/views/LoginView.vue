@@ -1,13 +1,14 @@
 <script setup>
 import { ref, watch } from 'vue';
 import { useToast } from '@/utils/useToast'; // 引入 useToast
-
+import { useUserStore } from '@/stores/user';
+const userStore = useUserStore();
 const username = ref('');
 const password = ref('');
 const errorMessage = ref('');
 const { showToast } = useToast(); // 使用 useToast
 
-const handleSubmit = () => {
+const handleSubmit = async () => {
   if (!username.value && !password.value) {
     errorMessage.value = '用户名和密码不能为空';
     return;
@@ -23,9 +24,16 @@ const handleSubmit = () => {
     return;
   }
 
-  // ...处理登录逻辑...
-  // 登录成功
-  showToast('登录成功', 'success');
+  let loginParams = {
+    email: username.value,
+    password: password.value,
+  };
+
+  await userStore.login(loginParams).then(() => {
+    showToast('登录成功', 'success');
+  }).catch((error) => {
+    showToast('登录失败，请检查邮箱和密码是否正确', 'error');
+  });
 };
 
 // 监听 username 和 password 的变化，当两者中任意一个变化时，清空 errorMessage

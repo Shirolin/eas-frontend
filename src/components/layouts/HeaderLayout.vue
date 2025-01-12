@@ -14,7 +14,7 @@ const handleClickOutside = (event) => {
   }
 };
 
-let isLogin = true;
+let isLogin = false;
 
 onMounted(() => {
   document.addEventListener('click', handleClickOutside);
