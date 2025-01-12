@@ -25,6 +25,27 @@
   background-color: @primary-color-active;
 }
 
+.secondary-btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.25rem;
+  background-color: @secondary-color;
+  color: @secondary-color-text;
+  transition: background-color 0.3s;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+  list-style: none;
+}
+
+.secondary-btn:hover {
+  background-color: @secondary-color-hover;
+}
+
+.secondary-btn:active {
+  background-color: @secondary-color-active;
+}
+
 // container styles
 .center-content {
   display: flex;
@@ -196,4 +217,54 @@
 
 .page-container {
   padding: 1rem;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.modal {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 400px;
+  max-width: 90%;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.modal-body {
+  margin-bottom: 20px;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.modal-header button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
 }
