@@ -17,6 +17,7 @@ export const useCourseStore = defineStore(
     const fetchCourses = async (page = DEFAULT_PAGE) => {
       try {
         const response = await request.get(`/api/courses?page=${page}&per_page=${DEFAULT_PER_PAGE}`)
+        console.log('response:', response)
         courses.value = response.data.data
         currentPage.value = response.data.current_page
         itemsPerPage.value = response.data.per_page

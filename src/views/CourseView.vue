@@ -10,14 +10,14 @@ console.log(userStore.userData);
 const isTeacher = userStore.isTeacher();
 const courseStore = useCourseStore();
 
-const { courses, currentPage, totalPages, fetchCourses, goToPage } = courseStore;
+const { fetchCourses, goToPage } = courseStore;
 
 onMounted(() => {
   fetchCourses();
   console.log({
-    courses,
-    currentPage,
-    totalPages,
+    courses: courseStore.courses,
+    currentPage: courseStore.currentPage,
+    totalPages: courseStore.totalPages,
   });
 });
 </script>
@@ -30,8 +30,8 @@ onMounted(() => {
         <button class="create-button">创建课程</button>
       </div>
       <!-- 课程列表 -->
-      <ul class="course-list" v-if="courses.length > 0">
-        <li v-for="course in courses" :key="course.id" class="course-item">
+      <ul class="course-list" v-if="courseStore.courses.length > 0">
+        <li v-for="course in courseStore.courses" :key="course.id" class="course-item">
           <div class="course-info">
             <h3>{{ course.name }}</h3>
             <!-- <p>{{ course.description }}</p> -->
@@ -53,10 +53,11 @@ onMounted(() => {
       </ul>
       <div v-else class="no-courses">暂无课程</div>
       <!-- 分页控件 -->
-      <div class="pagination" v-if="courses.length > 0">
-        <button @click="goToPage(currentPage - 1)" :disabled="currentPage === 1">上一页</button>
-        <span>第 {{ currentPage }} 页，共 {{ totalPages }} 页</span>
-        <button @click="goToPage(currentPage + 1)" :disabled="currentPage === totalPages">下一页</button>
+      <div class="pagination" v-if="courseStore.courses.length > 0">
+        <button @click="goToPage(courseStore.currentPage - 1)" :disabled="courseStore.currentPage === 1">上一页</button>
+        <span>第 {{ courseStore.currentPage }} 页，共 {{ courseStore.totalPages }} 页</span>
+        <button @click="goToPage(courseStore.currentPage + 1)"
+          :disabled="courseStore.currentPage === courseStore.totalPages">下一页</button>
       </div>
     </div>
   </div>
