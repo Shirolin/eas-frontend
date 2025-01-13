@@ -7,6 +7,7 @@ import { useStudentStore } from '@/stores/student';
 import { useToast } from '@/utils/useToast';
 import { useDebounce } from '@/utils/useDebounce';
 import CommonPagination from '@/components/common/CommonPagination.vue';
+import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
 
 const { showToast } = useToast();
 const router = useRouter();
@@ -22,21 +23,29 @@ const courseTeacher = ref(userStore.userData.nickname);
 const courseTeacherId = ref(userStore.userData.id);
 const subCourses = ref([]);
 const selectedStudents = ref([]);
+const isSubmitting = ref(false);
+const loading = ref(true);
 
 const fetchCourseDetail = async () => {
   const course = await courseStore.fetchCourse(courseId);
   courseName.value = course.name;
   courseUnitFee.value = course.unit_fee;
   subCourses.value = course.sub_courses.map(subCourse => ({
-    month: `${subCourse.year}-${String(subCourse.month).padStart(2, '0')}`
+    month: `${subCourse.year}-${String(subCourse.month).padStart(2, '0')}`,
+    fee: subCourse.fee,
   }));
   selectedStudents.value = course.students;
+  loading.value = false;
 };
 
 const updateCourse = async () => {
+  if (isSubmitting.value) return;
+
+  isSubmitting.value = true;
   const uniqueSubCourses = new Set(subCourses.value.map(subCourse => subCourse.month));
   if (uniqueSubCourses.size !== subCourses.value.length) {
     showToast('子课程的年份和月份组合必须唯一', 'error');
+    isSubmitting.value = false;
     return;
   }
 
@@ -60,6 +69,8 @@ const updateCourse = async () => {
     setTimeout(() => {
       router.push('/course');
     }, 3000);
+  }).finally(() => {
+    isSubmitting.value = false;
   });
 };
 
@@ -102,68 +113,76 @@ onMounted(() => {
 
 <template>
   <div class="list-detail">
-    <h2>编辑课程</h2>
-    <form @submit.prevent="updateCourse">
-      <!-- 课程信息 -->
-      <div class="form-group">
-        <label class="form-label" for="course-name">课程名称</label>
-        <input class="form-input" type="text" id="course-name" v-model="courseName" required />
-      </div>
-      <div class="form-group">
-        <label class="form-label" for="course-unit-fee">课程单价</label>
-        <input class="form-input" type="number" id="course-unit-fee" v-model="courseUnitFee" required />
-      </div>
-      <div class="form-group">
-        <label class="form-label" for="course-treacher">教师</label>
-        <input class="form-input" type="text" id="course-treacher" v-model="courseTeacher" disabled />
-      </div>
-      <hr />
-      <!-- 子课程信息 -->
-      <h4>子课程信息</h4>
-      <div v-if="subCourses.length > 0">
-        <div class="form-group" v-for="(subCourse, index) in subCourses" :key="index">
-          <div class="form-row-title">子课程 {{ index + 1 }}</div>
-          <div class="form-row">
-            <label class="form-label">年月</label>
-            <input class="form-input month-input" type="month" v-model="subCourse.month" required />
-            <button class="red-btn" @click="removeSubCourse(index)">-</button>
+    <div v-if="loading" class="loading">
+      <LoadingSpinner />
+    </div>
+    <div v-else>
+      <h2>编辑课程</h2>
+      <form @submit.prevent="updateCourse">
+        <!-- 课程信息 -->
+        <div class="form-group">
+          <label class="form-label" for="course-name">课程名称</label>
+          <input class="form-input" type="text" id="course-name" v-model="courseName" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="course-unit-fee">课程单价</label>
+          <input class="form-input" type="number" id="course-unit-fee" v-model="courseUnitFee" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="course-treacher">教师</label>
+          <input class="form-input" type="text" id="course-treacher" v-model="courseTeacher" disabled />
+        </div>
+        <hr />
+        <!-- 子课程信息 -->
+        <h4>子课程信息</h4>
+        <div v-if="subCourses.length > 0">
+          <div class="form-group" v-for="(subCourse, index) in subCourses" :key="index">
+            <div class="form-row-title">子课程 {{ index + 1 }}</div>
+            <div class="form-row">
+              <label class="form-label">年月</label>
+              <input class="form-input month-input" type="month" v-model="subCourse.month" required />
+              <input class="form-input" type="number" v-model="subCourse.fee" required />
+              <button class="red-btn" @click="removeSubCourse(index)">-</button>
+            </div>
           </div>
         </div>
-      </div>
-      <button class="green-btn" @click="addSubCourse">+</button>
-      <hr />
-      <!-- 学生选择 -->
-      <h4>参与该课程的学生</h4>
-      <div class="student-selection">
-        <div class="student-list">
-          <h5>待选学生</h5>
-          <ul>
-            <li v-for="student in studentStore.students" :key="student.id">
-              <button @click="selectStudent(student)"
-                :class="{ selected: selectedStudents.some(s => s.id === student.id) }"
-                :disabled="selectedStudents.some(s => s.id === student.id)">
-                {{ student.nickname }}
-              </button>
-            </li>
-          </ul>
+        <button class="green-btn" @click="addSubCourse">+</button>
+        <hr />
+        <!-- 学生选择 -->
+        <h4>参与该课程的学生</h4>
+        <div class="student-selection">
+          <div class="student-list">
+            <h5>待选学生</h5>
+            <ul>
+              <li v-for="student in studentStore.students" :key="student.id">
+                <button @click="selectStudent(student)"
+                  :class="{ selected: selectedStudents.some(s => s.id === student.id) }"
+                  :disabled="selectedStudents.some(s => s.id === student.id)">
+                  {{ student.nickname }}
+                </button>
+              </li>
+            </ul>
+          </div>
+          <div class="student-list">
+            <h5>已选学生</h5>
+            <ul>
+              <li v-for="student in selectedStudents" :key="student.id">
+                <button @click="deselectStudent(student)">{{ student.nickname }}</button>
+              </li>
+            </ul>
+          </div>
         </div>
-        <div class="student-list">
-          <h5>已选学生</h5>
-          <ul>
-            <li v-for="student in selectedStudents" :key="student.id">
-              <button @click="deselectStudent(student)">{{ student.nickname }}</button>
-            </li>
-          </ul>
+        <CommonPagination v-if="studentStore.students.length > 0" :currentPage="studentStore.currentPage"
+          :totalPages="studentStore.totalPages" @changePage="debouncedLoadStudents" />
+        <hr />
+        <div class="btn-group">
+          <router-link to="/course" class="btn-group-item secondary-btn">返回</router-link>
+          <button type="submit" class="btn-group-item primary-btn" :disabled="isSubmitting">
+            {{ isSubmitting ? '提交中...' : '更新' }}
+          </button>
         </div>
-      </div>
-      <CommonPagination v-if="studentStore.students.length > 0" :currentPage="studentStore.currentPage"
-        :totalPages="studentStore.totalPages" @changePage="debouncedLoadStudents" />
-      <hr />
-      <div class="btn-group">
-        <router-link to="/course" class="btn-group-item secondary-btn">返回</router-link>
-        <button type="submit" class="btn-group-item primary-btn">更新</button>
-      </div>
-    </form>
+      </form>
+    </div>
   </div>
 </template>
 

@@ -51,12 +51,17 @@ const courseTeacherId = ref(userStore.userData.id);
 // 新增子课程和学生选择
 const subCourses = ref([]);
 const selectedStudents = ref([]);
+const isSubmitting = ref(false);
 
 const createCourse = async () => {
+  if (isSubmitting.value) return;
+
+  isSubmitting.value = true;
   // 校验“年+月”组合唯一性
   const uniqueSubCourses = new Set(subCourses.value.map(subCourse => subCourse.month));
   if (uniqueSubCourses.size !== subCourses.value.length) {
     showToast('子课程的年份和月份组合必须唯一', 'error');
+    isSubmitting.value = false;
     return;
   }
 
@@ -81,6 +86,8 @@ const createCourse = async () => {
     setTimeout(() => {
       router.push('/course');
     }, 3000);
+  }).finally(() => {
+    isSubmitting.value = false;
   });
 };
 
@@ -182,7 +189,9 @@ onMounted(() => {
       <hr />
       <div class="btn-group">
         <router-link to="/course" class="btn-group-item secondary-btn">返回</router-link>
-        <button type="submit" class="btn-group-item primary-btn">创建</button>
+        <button type="submit" class="btn-group-item primary-btn" :disabled="isSubmitting">
+          {{ isSubmitting ? '提交中...' : '创建' }}
+        </button>
       </div>
     </form>
   </div>
