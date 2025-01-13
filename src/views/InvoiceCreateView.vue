@@ -71,6 +71,11 @@ const selectStudent = (studentId) => {
   selectedStudentId.value = studentId;
 };
 
+const handleCourseChange = () => {
+  selectedSubCourses.value = [];
+  selectedStudentId.value = null;
+};
+
 onMounted(() => {
   courseStore.fetchCourses();
 });
@@ -83,7 +88,7 @@ onMounted(() => {
       <!-- 选择课程 -->
       <div class="form-group">
         <label class="form-label">选择课程</label>
-        <select class="styled-select" v-model="selectedCourseId">
+        <select class="styled-select" v-model="selectedCourseId" @change="handleCourseChange">
           <option v-for="course in teacherCourses" :key="course.id" :value="course.id">{{ course.name }}</option>
         </select>
       </div>
