@@ -25,7 +25,12 @@ const loadInvoices = async (page) => {
 };
 
 const formatDate = (dateString) => {
-  return format(new Date(dateString), 'yy/MM/dd HH:mm:ss');
+  if (!dateString) return '';
+  try {
+    return format(new Date(dateString), 'yy/MM/dd HH:mm:ss');
+  } catch (error) {
+    return dateString;
+  }
 };
 
 const confirmCancelInvoice = (invoiceId) => {

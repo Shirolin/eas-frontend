@@ -32,6 +32,7 @@ const loadInvoiceDetail = () => {
 };
 
 const formatDate = (dateString) => {
+  if (!dateString) return '';
   try {
     return format(new Date(dateString), 'yy/MM/dd HH:mm:ss');
   } catch (error) {
