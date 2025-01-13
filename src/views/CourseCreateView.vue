@@ -11,20 +11,33 @@
   CONSTRAINT "courses_teacher_id_name_unique" UNIQUE ("teacher_id", "name")
 ); -->
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useUserStore } from '@/stores/user';
 import { useCourseStore } from '@/stores/course';
 import { useRouter } from 'vue-router';
 import { useToast } from '@/utils/useToast';
+import { useDebounce } from '@/utils/useDebounce';
+import CommonPagination from '@/components/common/CommonPagination.vue';
+
+
+// 新增导入
+import { useStudentStore } from '@/stores/student';
 
 const { showToast } = useToast();
 const router = useRouter();
 const userStore = useUserStore();
 const courseStore = useCourseStore();
+// 新增学生仓库
+const studentStore = useStudentStore();
+
 const courseName = ref('');
 const courseUnitFee = ref(0);
 const courseTeacher = ref(userStore.userData.nickname);
 const courseTeacherId = ref(userStore.userData.id);
+
+// 新增子课程和学生选择
+const subCourses = ref([{ name: '', unit_fee: 0 }]);
+const selectedStudents = ref([]);
 
 const createCourse = async () => {
   let params = {
@@ -33,7 +46,8 @@ const createCourse = async () => {
       unit_fee: courseUnitFee.value,
       teacher_id: courseTeacherId.value,
     },
-    sub_courses: [],
+    sub_courses: subCourses.value,
+    student_ids: selectedStudents.value.map(student => student.id),
   }
   console.log(params);
   await courseStore.createCourse(params).then(() => {
@@ -42,8 +56,30 @@ const createCourse = async () => {
       router.push('/course');
     }, 3000);
   });
-  // 跳转到课程列表页面
 };
+
+// 新增方法
+const addSubCourse = () => {
+  subCourses.value.push({ name: '', unit_fee: 0 });
+};
+
+const removeSubCourse = (index) => {
+  subCourses.value.splice(index, 1);
+};
+
+const fetchStudents = async () => {
+  await studentStore.fetchStudents();
+};
+
+const loadStudents = async (page) => {
+  await fetchStudents(page);
+};
+
+const debouncedLoadStudents = useDebounce(loadStudents, 300);
+
+onMounted(() => {
+  loadStudents();
+});
 </script>
 
 <template>
@@ -61,6 +97,23 @@ const createCourse = async () => {
       <div class="form-group">
         <label class="form-label" for="course-treacher">教师</label>
         <input class="form-input" type="text" id="course-treacher" v-model="courseTeacher" disabled />
+      </div>
+      <!-- 新增子课程表单 -->
+      <div class="form-group" v-for="(subCourse, index) in subCourses" :key="index">
+        <label class="form-label">子课程名称</label>
+        <input class="form-input" type="text" v-model="subCourse.name" required />
+        <label class="form-label">子课程单价</label>
+        <input class="form-input" type="number" v-model="subCourse.unit_fee" required />
+        <button type="button" @click="removeSubCourse(index)">删除子课程</button>
+      </div>
+      <button type="button" @click="addSubCourse">添加子课程</button>
+      <!-- 新增学生选择 -->
+      <div class="form-group">
+        <label class="form-label">选择学生</label>
+        <select class="form-input" v-model="selectedStudents" multiple>
+          <option v-for="student in studentStore.students" :key="student.id" :value="student">{{ student.nickname }}
+          </option>
+        </select>
       </div>
       <div class="btn-group">
         <router-link to="/course" class="btn-group-item secondary-btn">返回</router-link>
