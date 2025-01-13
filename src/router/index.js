@@ -10,6 +10,7 @@ import CourseCreateView from '@/views/CourseCreateView.vue'
 import InvoiceCreateView from '@/views/InvoiceCreateView.vue'
 import CourseEditView from '@/views/CourseEditView.vue'
 import { useUserStore } from '@/stores/user'
+import InvoicePayView from '@/views/InvoicePayView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -38,21 +39,9 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
-      path: '/invoice',
-      name: 'invoice',
-      component: InvoiceView,
-      meta: { requiresAuth: true },
-    },
-    {
       path: '/course/:id',
       name: 'course-detail',
       component: CourseDetailView,
-      meta: { requiresAuth: true },
-    },
-    {
-      path: '/invoice/:id',
-      name: 'invoice-detail',
-      component: InvoiceDetailView,
       meta: { requiresAuth: true },
     },
     {
@@ -62,15 +51,33 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
+      path: '/course/edit/:id',
+      name: 'course-edit',
+      component: CourseEditView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/invoice',
+      name: 'invoice',
+      component: InvoiceView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/invoice/:id',
+      name: 'invoice-detail',
+      component: InvoiceDetailView,
+      meta: { requiresAuth: true },
+    },
+    {
       path: '/invoice/create',
       name: 'invoice-create',
       component: InvoiceCreateView,
       meta: { requiresAuth: true },
     },
     {
-      path: '/course/edit/:id',
-      name: 'course-edit',
-      component: CourseEditView,
+      path: '/invoice/pay/:id',
+      name: 'invoice-pay',
+      component: InvoicePayView,
       meta: { requiresAuth: true },
     },
     {

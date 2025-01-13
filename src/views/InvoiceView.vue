@@ -64,6 +64,10 @@ const confirmSendInvoice = (invoiceId) => {
   });
 };
 
+const navigateToPayInvoice = (invoiceId) => {
+  router.push(`/invoice/pay/${invoiceId}`);
+};
+
 onMounted(() => {
   loadInvoices();
   if (!isTeacher) {
@@ -111,7 +115,8 @@ onMounted(() => {
                 @click="confirmCancelInvoice(invoice.id)">取消</button>
             </div>
             <div v-if="invoice.student_id == userStore.userData.id" class="btn-group">
-              <button v-if="invoice.operation_status.canPay" class="btn-group-item green-btn">支付</button>
+              <button v-if="invoice.operation_status.canPay" class="btn-group-item green-btn"
+                @click="navigateToPayInvoice(invoice.id)">支付</button>
             </div>
           </div>
         </li>

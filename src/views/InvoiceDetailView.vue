@@ -76,6 +76,10 @@ const sendInvoice = async () => {
   await invoiceStore.sendInvoice(invoiceId);
 };
 
+const navigateToPayInvoice = () => {
+  router.push(`/invoice/pay/${invoice.value.id}`);
+};
+
 onMounted(() => {
   loadInvoiceDetail();
 });
@@ -112,7 +116,7 @@ onMounted(() => {
           <div v-if="(invoice.creator_id == userStore.userData.id) && invoice.operation_status.canCancel"
             class="btn-group-item orange-btn" @click="confirmCancelInvoice">取消</div>
           <div v-if="(invoice.student_id == userStore.userData.id) && invoice.operation_status.canPay"
-            class="btn-group-item green-btn">支付</div>
+            class="btn-group-item green-btn" @click="navigateToPayInvoice">支付</div>
         </div>
       </div>
     </div>
