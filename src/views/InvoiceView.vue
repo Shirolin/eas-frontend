@@ -15,7 +15,7 @@ const router = useRouter();
 const isTeacher = userStore.isTeacher();
 const modalStore = useModalStore();
 const { showToast } = useToast();
-const { fetchInvoices, cancelInvoice } = invoiceStore;
+const { fetchInvoices, cancelInvoice, sendInvoice } = invoiceStore;
 const loading = ref(false);
 
 const loadInvoices = async (page) => {
@@ -35,6 +35,19 @@ const confirmCancelInvoice = (invoiceId) => {
     onConfirm: async () => {
       await cancelInvoice(invoiceId);
       showToast('账单已取消', 'success');
+      loadInvoices(invoiceStore.currentPage);
+    },
+    onCancel: () => { },
+  });
+};
+
+const confirmSendInvoice = (invoiceId) => {
+  modalStore.show({
+    title: '确认发送',
+    content: '确定要发送这张账单吗？',
+    onConfirm: async () => {
+      await sendInvoice(invoiceId);
+      showToast('账单已发送', 'success');
       loadInvoices(invoiceStore.currentPage);
     },
     onCancel: () => { },
@@ -75,7 +88,12 @@ onMounted(() => {
           </div>
           <div class="common-list-actions">
             <router-link :to="`/invoice/${invoice.id}`" class="primary-btn">查看详情</router-link>
-            <button class="btn-group-item red-btn" @click="confirmCancelInvoice(invoice.id)">取消</button>
+            <div v-if="invoice.creator_id == userStore.userData.id" class="btn-group">
+              <button v-if="invoice.operation_status.canSend" class="btn-group-item orange-btn"
+                @click="confirmSendInvoice(invoice.id)">发送</button>
+              <button v-if="invoice.operation_status.canCancel" class="btn-group-item red-btn"
+                @click="confirmCancelInvoice(invoice.id)">取消</button>
+            </div>
           </div>
         </li>
       </ul>
