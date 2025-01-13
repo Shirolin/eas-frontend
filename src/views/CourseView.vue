@@ -17,15 +17,19 @@ const { fetchCourses, goToPage } = courseStore;
 const loading = ref(false);
 
 const loadCourses = async (page) => {
-  loading.value = true;
   await fetchCourses(page);
   loading.value = false;
 };
 
 const debouncedLoadCourses = useDebounce(loadCourses, 300);
 
-onMounted(() => {
+const loadCourseList = () => {
+  loading.value = true;
   debouncedLoadCourses();
+};
+
+onMounted(() => {
+  loadCourseList();
 });
 </script>
 <template>

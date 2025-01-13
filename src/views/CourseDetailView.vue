@@ -15,13 +15,17 @@ const course = ref({});
 const loading = ref(false);
 
 const fetchCourseDetail = async () => {
-  loading.value = true;
   const courseId = route.params.id;
   course.value = await courseStore.fetchCourse(courseId);
   loading.value = false;
 };
 
 const debouncedFetchCourseDetail = useDebounce(fetchCourseDetail, 300);
+
+const loadCourseDetail = () => {
+  loading.value = true;
+  debouncedFetchCourseDetail();
+};
 
 const deleteCourse = async () => {
   const courseId = route.params.id;
@@ -30,7 +34,7 @@ const deleteCourse = async () => {
 };
 
 onMounted(() => {
-  debouncedFetchCourseDetail();
+  loadCourseDetail();
 });
 </script>
 <template>
