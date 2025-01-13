@@ -51,6 +51,25 @@ onMounted(() => {
         <span>学生数: {{ course.students_count }}</span>
         <span>单价: {{ course.unit_fee }}</span>
       </div>
+      <!-- 子课程信息 -->
+      <div v-if="course.sub_courses && course.sub_courses.length > 0" class="sub-courses">
+        <h4>子课程信息</h4>
+        <ul>
+          <li v-for="subCourse in course.sub_courses" :key="subCourse.id">
+            <span>年月: {{ subCourse.year }}-{{ subCourse.month }}</span>
+            <span>费用: {{ subCourse.fee }}</span>
+          </li>
+        </ul>
+      </div>
+      <!-- 学生信息 -->
+      <div v-if="course.students && course.students.length > 0" class="students">
+        <h4>学生信息</h4>
+        <ul>
+          <li v-for="student in course.students" :key="student.id">
+            <span>{{ student.nickname }}</span>
+          </li>
+        </ul>
+      </div>
       <div class="list-detail-actions" v-if="isTeacher">
         <div class="btn-group">
           <router-link to="/course" class="btn-group-item secondary-btn">返回</router-link>
@@ -71,5 +90,34 @@ onMounted(() => {
   span {
     margin-right: 1rem;
   }
+}
+
+.sub-courses,
+.students {
+  margin-top: 1rem;
+}
+
+.sub-courses ul,
+.students ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sub-courses li,
+.students li {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem;
+  border-bottom: 1px solid #ccc;
+}
+
+.sub-courses li span,
+.students li span {
+  flex: 1;
+}
+
+.sub-courses li span:first-child,
+.students li span:first-child {
+  font-weight: bold;
 }
 </style>
