@@ -75,7 +75,7 @@ const updateCourse = async () => {
 };
 
 const addSubCourse = () => {
-  subCourses.value.push({ month: '', fee: 0 });
+  subCourses.value.push({ month: '' });
 };
 
 const removeSubCourse = (index) => {
@@ -141,7 +141,6 @@ onMounted(() => {
             <div class="form-row">
               <label class="form-label">年月</label>
               <input class="form-input month-input" type="month" v-model="subCourse.month" required />
-              <input class="form-input" type="number" v-model="subCourse.fee" required />
               <button class="red-btn" @click="removeSubCourse(index)">-</button>
             </div>
           </div>
