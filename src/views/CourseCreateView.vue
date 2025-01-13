@@ -15,6 +15,7 @@
         <input type="number" id="course-fee" v-model="courseFee" required />
       </div>
       <button type="submit" class="primary-btn">创建</button>
+      <router-link to="/course" class="secondary-btn">返回</router-link>
     </form>
   </div>
 </template>
@@ -78,5 +79,20 @@ const createCourse = async () => {
 
 .primary-btn:hover {
   background-color: #0056b3;
+}
+
+.secondary-btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.25rem;
+  background-color: #6c757d;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-left: 0.5rem;
+}
+
+.secondary-btn:hover {
+  background-color: #5a6268;
 }
 </style>
