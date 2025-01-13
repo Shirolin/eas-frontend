@@ -25,6 +25,7 @@ export const useInvoiceStore = defineStore(
         totalPages.value = response.data.last_page
       } catch (error) {
         console.error('Failed to fetch invoices:', error)
+        throw error
       }
     }
 
@@ -35,6 +36,7 @@ export const useInvoiceStore = defineStore(
         return response.data
       } catch (error) {
         console.error('Failed to fetch invoice:', error)
+        throw error
       }
     }
 
@@ -45,17 +47,7 @@ export const useInvoiceStore = defineStore(
         invoices.value.push(response.data)
       } catch (error) {
         console.error('Failed to create invoice:', error)
-      }
-    }
-
-    // 更新账单
-    const updateInvoice = async (invoiceId, invoiceData) => {
-      try {
-        const response = await request.put(`/api/invoices/${invoiceId}`, invoiceData)
-        const index = invoices.value.findIndex((invoice) => invoice.id === invoiceId)
-        invoices.value[index] = response.data
-      } catch (error) {
-        console.error('Failed to update invoice:', error)
+        throw error
       }
     }
 
@@ -63,12 +55,9 @@ export const useInvoiceStore = defineStore(
     const cancelInvoice = async (invoiceId) => {
       try {
         await request.post(`/api/invoices/${invoiceId}/cancel`)
-        const index = invoices.value.findIndex((invoice) => invoice.id === invoiceId)
-        if (index !== -1) {
-          invoices.value[index].status = 'cancelled'
-        }
       } catch (error) {
         console.error('Failed to cancel invoice:', error)
+        throw error
       }
     }
 
@@ -80,6 +69,7 @@ export const useInvoiceStore = defineStore(
         invoices.value[index] = response.data
       } catch (error) {
         console.error('Failed to send invoice:', error)
+        throw error
       }
     }
 
@@ -99,7 +89,6 @@ export const useInvoiceStore = defineStore(
       fetchInvoices,
       fetchInvoice,
       createInvoice,
-      updateInvoice,
       cancelInvoice,
       sendInvoice,
     }
