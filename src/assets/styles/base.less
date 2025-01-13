@@ -13,6 +13,13 @@
 }
 
 // button styles
+.no-style-btn {
+  all: unset;
+  /* 去除button的默认样式 */
+  display: inline-block;
+  /* 保持块级元素特性 */
+}
+
 .primary-btn {
   padding: 0.5rem 1rem;
   border: none;
@@ -32,6 +39,12 @@
 
 .primary-btn:active {
   background-color: @primary-color-active;
+}
+
+.primary-btn.disabled {
+  background-color: @primary-color-disabled;
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 .secondary-btn {
@@ -55,6 +68,12 @@
   background-color: @secondary-color-active;
 }
 
+.secondary-btn.disabled {
+  background-color: @secondary-color-disabled;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
 .yellow-btn {
   padding: 0.5rem 1rem;
   border: none;
@@ -74,6 +93,12 @@
 
 .yellow-btn:active {
   background-color: @yellow-color-active;
+}
+
+.yellow-btn.disabled {
+  background-color: @yellow-color-disabled;
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 // container styles

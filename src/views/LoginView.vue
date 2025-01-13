@@ -2,10 +2,13 @@
 import { ref, watch } from 'vue';
 import { useToast } from '@/utils/useToast'; // 引入 useToast
 import { useUserStore } from '@/stores/user';
+import { useDebounce } from '@/utils/useDebounce';
+
 const userStore = useUserStore();
 const username = ref('');
 const password = ref('');
 const errorMessage = ref('');
+const isSubmitting = ref(false); // 添加提交状态
 const { showToast } = useToast(); // 使用 useToast
 
 const handleSubmit = async () => {
@@ -26,8 +29,9 @@ const handleSubmit = async () => {
   console.log({
     username: username.value,
     password: password.value,
-  })
+  });
 
+  isSubmitting.value = true;
   let loginParams = {
     username: username.value,
     password: password.value,
@@ -35,8 +39,12 @@ const handleSubmit = async () => {
 
   await userStore.login(loginParams).then(() => {
     showToast('登录成功', 'success');
+  }).finally(() => {
+    isSubmitting.value = false;
   });
 };
+
+const debouncedHandleSubmit = useDebounce(handleSubmit, 1000, true); // 传递 immediate 选项
 
 // 监听 username 和 password 的变化，当两者中任意一个变化时，清空 errorMessage
 watch([username, password], () => {
@@ -48,7 +56,7 @@ watch([username, password], () => {
     <div class="card login-container">
       <div class="form-title">教务管理系统</div>
       <h2>登录</h2>
-      <form id="loginForm" @submit.prevent="handleSubmit">
+      <form id="loginForm" @submit.prevent="debouncedHandleSubmit">
         <div class="form-group">
           <label class="form-label" for="username">用户名</label>
           <input class="form-input" type="text" id="username" v-model="username" name="username" required>
@@ -62,7 +70,9 @@ watch([username, password], () => {
           <input class="form-checkbox" type="checkbox" id="remember" name="remember">
           <label for="remember" style="margin-bottom: 0;">记住我</label>
         </div>
-        <div class="primary-btn" @click="handleSubmit">登录</div>
+        <div class="primary-btn" :class="{ 'disabled': isSubmitting }" @click="debouncedHandleSubmit">
+          {{ isSubmitting ? '登录中...' : '登录' }}
+        </div>
       </form>
     </div>
   </div>
