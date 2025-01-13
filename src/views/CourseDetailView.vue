@@ -5,11 +5,15 @@ import { useCourseStore } from '@/stores/course';
 import { useUserStore } from '@/stores/user';
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
 import { useDebounce } from '@/utils/useDebounce';
+import { useModalStore } from '@/stores/modalStore';
+import { useToast } from '@/utils/useToast';
 
 const route = useRoute();
 const router = useRouter();
 const courseStore = useCourseStore();
 const userStore = useUserStore();
+const modalStore = useModalStore();
+const { showToast } = useToast();
 const isTeacher = userStore.isTeacher();
 const course = ref({});
 const loading = ref(false);
@@ -27,10 +31,22 @@ const loadCourseDetail = () => {
   debouncedFetchCourseDetail();
 };
 
+const confirmDeleteCourse = () => {
+  modalStore.show({
+    title: '确认删除',
+    content: '确定要删除这门课程吗？',
+    onConfirm: async () => {
+      await deleteCourse();
+      showToast('课程已删除', 'success');
+      router.push('/course');
+    },
+    onCancel: () => { },
+  });
+};
+
 const deleteCourse = async () => {
   const courseId = route.params.id;
   await courseStore.deleteCourse(courseId);
-  router.push('/course');
 };
 
 onMounted(() => {
@@ -73,8 +89,8 @@ onMounted(() => {
       <div class="list-detail-actions" v-if="isTeacher">
         <div class="btn-group">
           <router-link to="/course" class="btn-group-item secondary-btn">返回</router-link>
-          <router-link :to="`/course/${course.id}/edit`" class="btn-group-item primary-btn">编辑</router-link>
-          <div class="btn-group-item red-btn" @click="deleteCourse">删除</div>
+          <router-link :to="`/course/${course.id}/edit`" class="btn-group-item yellow-btn">编辑</router-link>
+          <div class="btn-group-item red-btn" @click="confirmDeleteCourse">删除</div>
         </div>
       </div>
     </div>
