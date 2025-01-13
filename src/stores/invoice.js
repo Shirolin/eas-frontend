@@ -28,6 +28,58 @@ export const useInvoiceStore = defineStore(
       }
     }
 
+    // 获取账单详情
+    const fetchInvoice = async (invoiceId) => {
+      try {
+        const response = await request.get(`/api/invoices/${invoiceId}`)
+        return response.data
+      } catch (error) {
+        console.error('Failed to fetch invoice:', error)
+      }
+    }
+
+    // 创建账单
+    const createInvoice = async (invoiceData) => {
+      try {
+        const response = await request.post('/api/invoices', invoiceData)
+        invoices.value.push(response.data)
+      } catch (error) {
+        console.error('Failed to create invoice:', error)
+      }
+    }
+
+    // 更新账单
+    const updateInvoice = async (invoiceId, invoiceData) => {
+      try {
+        const response = await request.put(`/api/invoices/${invoiceId}`, invoiceData)
+        const index = invoices.value.findIndex((invoice) => invoice.id === invoiceId)
+        invoices.value[index] = response.data
+      } catch (error) {
+        console.error('Failed to update invoice:', error)
+      }
+    }
+
+    // 删除账单
+    const deleteInvoice = async (invoiceId) => {
+      try {
+        await request.delete(`/api/invoices/${invoiceId}`)
+        invoices.value = invoices.value.filter((invoice) => invoice.id !== invoiceId)
+      } catch (error) {
+        console.error('Failed to delete invoice:', error)
+      }
+    }
+
+    // 发送账单
+    const sendInvoice = async (invoiceId) => {
+      try {
+        const response = await request.post(`/api/invoices/${invoiceId}/send`)
+        const index = invoices.value.findIndex((invoice) => invoice.id === invoiceId)
+        invoices.value[index] = response.data
+      } catch (error) {
+        console.error('Failed to send invoice:', error)
+      }
+    }
+
     // 跳转到指定页
     const goToPage = (page) => {
       if (page >= 1 && page <= totalPages.value) {
@@ -40,8 +92,13 @@ export const useInvoiceStore = defineStore(
       currentPage,
       itemsPerPage,
       totalPages,
-      fetchInvoices,
       goToPage,
+      fetchInvoices,
+      fetchInvoice,
+      createInvoice,
+      updateInvoice,
+      deleteInvoice,
+      sendInvoice,
     }
   },
   {
