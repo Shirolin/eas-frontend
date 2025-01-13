@@ -35,7 +35,7 @@ request.interceptors.response.use(
     if (response.status === 200) {
       return response.data
     } else {
-      router.push('/notFound')
+      return Promise.reject(response) // 返回错误响应
     }
   },
   (error) => {
@@ -51,7 +51,6 @@ request.interceptors.response.use(
  * @param {*} response
  */
 function handleErrorResponse(response) {
-  let msg = ''
   switch (response.status) {
     case 401:
       if (response.data.data.isLogin == true) {
@@ -83,15 +82,9 @@ function handleErrorResponse(response) {
  * 校验报错处理
  */
 function handleValidationError(response) {
-  console.log('handleValidationError')
-  try {
-    let msg = Object.values(response.data.message).join('，')
-    console.log(msg)
-    showToast(msg, 'error')
-  } catch (error) {
-    console.error(error)
-    showToast('未知校验错误', 'error')
-  }
+  let msg = Object.values(response.data.message).join('，')
+  showToast(msg, 'error')
+  throw new Error(msg)
 }
 
 /**

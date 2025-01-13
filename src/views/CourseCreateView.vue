@@ -38,7 +38,9 @@ const createCourse = async () => {
   console.log(params);
   await courseStore.createCourse(params).then(() => {
     showToast('创建成功', 'success');
-    router.push('/course');
+    setTimeout(() => {
+      router.push('/course');
+    }, 3000);
   });
   // 跳转到课程列表页面
 };
