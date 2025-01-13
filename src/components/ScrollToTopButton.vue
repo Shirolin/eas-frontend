@@ -30,29 +30,5 @@ onUnmounted(() => {
 </template>
 
 <style lang="less" scoped>
-.scroll-to-top {
-  position: fixed;
-  bottom: 2rem;
-  right: 2rem;
-  background-color: @primary-color;
-  color: @primary-color-text;
-  border: none;
-  border-radius: 50%;
-  width: 3rem;
-  height: 3rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  transition: background-color 0.3s;
-
-  &:hover {
-    background-color: @primary-color-hover;
-  }
-
-  &:active {
-    background-color: @primary-color-active;
-  }
-}
+/** */
 </style>
