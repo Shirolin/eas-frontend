@@ -106,10 +106,10 @@ onMounted(() => {
       <div class="list-detail-actions">
         <div class="btn-group">
           <router-link to="/invoice" class="btn-group-item secondary-btn">返回</router-link>
-          <button v-if="invoice.creator_id == userStore.userData.id" class="btn-group-item green-btn"
-            @click="confirmSendInvoice">发送</button>
-          <div v-if="invoice.creator_id == userStore.userData.id" class="btn-group-item orange-btn"
-            @click="confirmCancelInvoice">取消</div>
+          <button v-if="(invoice.creator_id == userStore.userData.id) && invoice.operation_status.canSend"
+            class="btn-group-item green-btn" @click="confirmSendInvoice">发送</button>
+          <div v-if="(invoice.creator_id == userStore.userData.id) && invoice.operation_status.canCancel"
+            class="btn-group-item orange-btn" @click="confirmCancelInvoice">取消</div>
         </div>
       </div>
     </div>
