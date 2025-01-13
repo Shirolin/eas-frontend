@@ -27,6 +27,16 @@ export const useCourseStore = defineStore(
       }
     }
 
+    // 获取课程详情
+    const fetchCourse = async (courseId) => {
+      try {
+        const response = await request.get(`/api/courses/${courseId}`)
+        return response.data
+      } catch (error) {
+        console.error('Failed to fetch course:', error)
+      }
+    }
+
     // 创建课程
     const createCourse = async (courseData) => {
       try {
@@ -34,6 +44,27 @@ export const useCourseStore = defineStore(
         courses.value.push(response.data)
       } catch (error) {
         console.error('Failed to create course:', error)
+      }
+    }
+
+    // 更新课程
+    const updateCourse = async (courseId, courseData) => {
+      try {
+        const response = await request.put(`/api/courses/${courseId}`, courseData)
+        const index = courses.value.findIndex((course) => course.id === courseId)
+        courses.value[index] = response.data
+      } catch (error) {
+        console.error('Failed to update course:', error)
+      }
+    }
+
+    // 删除课程
+    const deleteCourse = async (courseId) => {
+      try {
+        await request.delete(`/api/courses/${courseId}`)
+        courses.value = courses.value.filter((course) => course.id !== courseId)
+      } catch (error) {
+        console.error('Failed to delete course:', error)
       }
     }
 
@@ -49,9 +80,12 @@ export const useCourseStore = defineStore(
       currentPage,
       itemsPerPage,
       totalPages,
-      fetchCourses,
       goToPage,
+      fetchCourses,
+      fetchCourse,
       createCourse,
+      updateCourse,
+      deleteCourse,
     }
   },
   {
