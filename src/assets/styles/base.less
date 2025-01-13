@@ -7,8 +7,8 @@
   display: flex;
   justify-content: center;
   // 内部按钮之间的间距
-  button {
-    margin-right: 0.1rem;
+  .btn-group-item {
+    margin-right: 0.5rem;
   }
 }
 
@@ -530,6 +530,21 @@
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 1rem;
+}
+
+.list-detail {
+  max-width: 40rem;
+  margin: 2rem auto;
+  padding: 1rem;
+  background-color: @card-bg-color;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+}
+
+.list-detail-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
 }
 
 // pagination styles

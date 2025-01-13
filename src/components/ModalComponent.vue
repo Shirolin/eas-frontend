@@ -34,10 +34,10 @@ const handleCancel = () => {
       </div>
       <div class="modal-footer">
         <div class="modal-footer-right btn-group">
-          <button class="secondary-btn" v-if="modalStore.showCancel" @click="handleCancel">
+          <button class="btn-group-item secondary-btn" v-if="modalStore.showCancel" @click="handleCancel">
             {{ modalStore.cancelText }}
           </button>
-          <button class="primary-btn" @click="handleConfirm">
+          <button class="btn-group-item primary-btn" @click="handleConfirm">
             {{ modalStore.confirmText }}
           </button>
         </div>
