@@ -112,7 +112,7 @@ onMounted(() => {
         <h4>账单明细: {{ invoice.items.length }}项</h4>
         <ul>
           <li v-for="item in invoice.items" :key="item.id">
-            <span>子课程: {{ item.sub_course_name }}</span>
+            <span>子课程: {{ item.sub_course.year_month }}</span>
             <span>金额: {{ item.amount }}</span>
           </li>
         </ul>
