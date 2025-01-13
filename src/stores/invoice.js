@@ -92,7 +92,7 @@ export const useInvoiceStore = defineStore(
     const getUnpaidInvoiceCount = async () => {
       try {
         const response = await request.get('/api/my/invoices/unpaid/count')
-        return response.data.count
+        return response.data
       } catch (error) {
         console.error('Failed to get unpaid invoice count:', error)
         throw error
@@ -127,6 +127,8 @@ export const useInvoiceStore = defineStore(
       createInvoice,
       cancelInvoice,
       sendInvoice,
+      getUnpaidInvoiceCount,
+      payInvoice,
     }
   },
   {

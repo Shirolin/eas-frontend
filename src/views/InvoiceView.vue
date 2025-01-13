@@ -15,13 +15,18 @@ const router = useRouter();
 const isTeacher = userStore.isTeacher();
 const modalStore = useModalStore();
 const { showToast } = useToast();
-const { fetchInvoices, cancelInvoice, sendInvoice } = invoiceStore;
+const { fetchInvoices, cancelInvoice, sendInvoice, getUnpaidInvoiceCount } = invoiceStore;
 const loading = ref(false);
+const unpaidInvoiceCount = ref(0);
 
 const loadInvoices = async (page) => {
   loading.value = true;
   await fetchInvoices(page);
   loading.value = false;
+};
+
+const loadUnpaidInvoiceCount = async () => {
+  unpaidInvoiceCount.value = await getUnpaidInvoiceCount();
 };
 
 const formatDate = (dateString) => {
@@ -61,11 +66,17 @@ const confirmSendInvoice = (invoiceId) => {
 
 onMounted(() => {
   loadInvoices();
+  if (!isTeacher) {
+    loadUnpaidInvoiceCount();
+  }
 });
 </script>
 <template>
   <div>
-    <div class="page-title">账单{{ isTeacher ? '管理' : '' }}</div>
+    <div class="page-title">
+      账单{{ isTeacher ? '管理' : '' }}
+      <span v-if="!isTeacher && unpaidInvoiceCount > 0">（待支付账单数：{{ unpaidInvoiceCount }}）</span>
+    </div>
     <div class="page-container">
       <!-- 教师用户操作按钮 -->
       <div v-if="isTeacher" class="common-list-top-actions">
