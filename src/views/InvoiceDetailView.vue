@@ -7,6 +7,7 @@ import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
 import { useDebounce } from '@/utils/useDebounce';
 import { useModalStore } from '@/stores/modalStore';
 import { useToast } from '@/utils/useToast';
+import { format } from 'date-fns';
 
 const route = useRoute();
 const router = useRouter();
@@ -28,6 +29,14 @@ const debouncedFetchInvoiceDetail = useDebounce(fetchInvoiceDetail, 300);
 const loadInvoiceDetail = () => {
   loading.value = true;
   debouncedFetchInvoiceDetail();
+};
+
+const formatDate = (dateString) => {
+  try {
+    return format(new Date(dateString), 'yy/MM/dd HH:mm:ss');
+  } catch (error) {
+    return dateString;
+  }
 };
 
 const confirmCancelInvoice = () => {
@@ -83,7 +92,7 @@ onMounted(() => {
         <span>金额: {{ invoice.total_amount }}</span>
         <span>状态: {{ invoice.status_name }}</span>
         <span>创建者: {{ invoice.creator_name }}</span>
-        <span>日期: {{ invoice.created_at }}</span>
+        <span>日期: {{ formatDate(invoice.created_at) }}</span>
       </div>
       <div v-if="invoice.items && invoice.items.length > 0" class="invoice-items">
         <h4>账单明细: {{ invoice.items.length }}项</h4>
