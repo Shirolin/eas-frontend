@@ -111,6 +111,8 @@ onMounted(() => {
             class="btn-group-item green-btn" @click="confirmSendInvoice">发送</button>
           <div v-if="(invoice.creator_id == userStore.userData.id) && invoice.operation_status.canCancel"
             class="btn-group-item orange-btn" @click="confirmCancelInvoice">取消</div>
+          <div v-if="(invoice.student_id == userStore.userData.id) && invoice.operation_status.canPay"
+            class="btn-group-item green-btn">支付</div>
         </div>
       </div>
     </div>

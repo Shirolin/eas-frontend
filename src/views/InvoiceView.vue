@@ -99,6 +99,9 @@ onMounted(() => {
               <button v-if="invoice.operation_status.canCancel" class="btn-group-item orange-btn"
                 @click="confirmCancelInvoice(invoice.id)">取消</button>
             </div>
+            <div v-if="invoice.student_id == userStore.userData.id" class="btn-group">
+              <button v-if="invoice.operation_status.canPay" class="btn-group-item green-btn">支付</button>
+            </div>
           </div>
         </li>
       </ul>
