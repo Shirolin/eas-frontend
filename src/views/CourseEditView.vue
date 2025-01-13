@@ -83,13 +83,13 @@ const loadStudents = async (page) => {
 const debouncedLoadStudents = useDebounce(loadStudents, 300);
 
 const selectStudent = (student) => {
-  if (!selectedStudents.value.includes(student)) {
+  if (!selectedStudents.value.some(s => s.id === student.id)) {
     selectedStudents.value.push(student);
   }
 };
 
 const deselectStudent = (student) => {
-  const index = selectedStudents.value.indexOf(student);
+  const index = selectedStudents.value.findIndex(s => s.id === student.id);
   if (index > -1) {
     selectedStudents.value.splice(index, 1);
   }
@@ -141,8 +141,9 @@ onMounted(() => {
           <h5>待选学生</h5>
           <ul>
             <li v-for="student in studentStore.students" :key="student.id">
-              <button @click="selectStudent(student)" :class="{ selected: selectedStudents.includes(student) }"
-                :disabled="selectedStudents.includes(student)">
+              <button @click="selectStudent(student)"
+                :class="{ selected: selectedStudents.some(s => s.id === student.id) }"
+                :disabled="selectedStudents.some(s => s.id === student.id)">
                 {{ student.nickname }}
               </button>
             </li>
