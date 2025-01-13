@@ -27,6 +27,16 @@ export const useCourseStore = defineStore(
       }
     }
 
+    // 创建课程
+    const createCourse = async (courseData) => {
+      try {
+        const response = await request.post('/api/courses', courseData)
+        courses.value.push(response.data)
+      } catch (error) {
+        console.error('Failed to create course:', error)
+      }
+    }
+
     // 跳转到指定页
     const goToPage = (page) => {
       if (page >= 1 && page <= totalPages.value) {
@@ -41,6 +51,7 @@ export const useCourseStore = defineStore(
       totalPages,
       fetchCourses,
       goToPage,
+      createCourse,
     }
   },
   {

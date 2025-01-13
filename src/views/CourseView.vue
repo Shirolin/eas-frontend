@@ -35,7 +35,7 @@ onMounted(() => {
     <div class="page-container">
       <!-- 教师用户操作按钮 -->
       <div v-if="isTeacher" class="teacher-actions">
-        <button class="create-button">创建课程</button>
+        <router-link to="/course/create" class="primary-btn">创建课程</router-link>
       </div>
       <!-- 加载动画 -->
       <div v-if="loading" class="loading">
@@ -55,7 +55,7 @@ onMounted(() => {
             </div>
           </div>
           <div class="course-actions">
-            <button class="details-button">查看详情</button>
+            <router-link :to="`/course/${course.id}`" class="primary-btn">查看详情</router-link>
             <div class="btn-group" v-if="isTeacher">
               <button class="edit-button">修改</button>
               <button class="delete-button">删除</button>
