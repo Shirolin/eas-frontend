@@ -88,10 +88,21 @@ export const useInvoiceStore = defineStore(
       }
     }
 
+    // 获取待支付账单数量
+    const getUnpaidInvoiceCount = async () => {
+      try {
+        const response = await request.get('/api/my/invoices/unpaid/count')
+        return response.data.count
+      } catch (error) {
+        console.error('Failed to get unpaid invoice count:', error)
+        throw error
+      }
+    }
+
     // 支付账单
     const payInvoice = async (invoiceId) => {
       try {
-        await request.post(`/api/invoices/${invoiceId}/pay`)
+        await request.post(`/api/my/invoices/${invoiceId}/pay`)
       } catch (error) {
         console.error('Failed to pay invoice:', error)
         throw error
