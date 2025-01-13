@@ -51,6 +51,7 @@ request.interceptors.response.use(
  * @param {*} response
  */
 function handleErrorResponse(response) {
+  let msg = ''
   switch (response.status) {
     case 401:
       if (response.data.data.isLogin == true) {
@@ -61,17 +62,35 @@ function handleErrorResponse(response) {
       }
       break
     case 404:
-      showToast('请求资源不存在', { type: 'error' })
+      showToast('请求资源不存在', 'error')
+      break
+    case 422:
+      handleValidationError(response)
       break
     case 500:
-      showToast('服务器异常', { type: 'error' })
+      showToast('服务器异常', 'error')
       break
     default:
       console.error({
         msg: '[响应拦截器]服务器异常',
         error: response,
       })
-      showToast('服务器异常', { type: 'error' })
+      showToast('服务器异常', 'error')
+  }
+}
+
+/**
+ * 校验报错处理
+ */
+function handleValidationError(response) {
+  console.log('handleValidationError')
+  try {
+    let msg = Object.values(response.data.message).join('，')
+    console.log(msg)
+    showToast(msg, 'error')
+  } catch (error) {
+    console.error(error)
+    showToast('未知校验错误', 'error')
   }
 }
 
