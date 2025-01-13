@@ -23,7 +23,7 @@ export const useCourseStore = defineStore(
         itemsPerPage.value = response.data.per_page
         totalPages.value = response.data.last_page
       } catch (error) {
-        console.error('Failed to fetch courses:', error)
+        throw error
       }
     }
 
@@ -33,7 +33,7 @@ export const useCourseStore = defineStore(
         const response = await request.get(`/api/courses/${courseId}`)
         return response.data
       } catch (error) {
-        console.error('Failed to fetch course:', error)
+        throw error
       }
     }
 
@@ -41,9 +41,8 @@ export const useCourseStore = defineStore(
     const createCourse = async (courseData) => {
       try {
         const response = await request.post('/api/courses', courseData)
-        // courses.value.push(response.data)
       } catch (error) {
-        console.error('Failed to create course:', error)
+        throw error
       }
     }
 
@@ -55,6 +54,7 @@ export const useCourseStore = defineStore(
         courses.value[index] = response.data
       } catch (error) {
         console.error('Failed to update course:', error)
+        throw error
       }
     }
 
@@ -65,6 +65,7 @@ export const useCourseStore = defineStore(
         courses.value = courses.value.filter((course) => course.id !== courseId)
       } catch (error) {
         console.error('Failed to delete course:', error)
+        throw error
       }
     }
 
