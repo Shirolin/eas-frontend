@@ -4,6 +4,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { useInvoiceStore } from '@/stores/invoice';
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
 import { useToast } from '@/utils/useToast';
+import { useDebounce } from '@/utils/useDebounce';
 
 const route = useRoute();
 const router = useRouter();
@@ -44,6 +45,8 @@ const payInvoice = async () => {
   }
 };
 
+const debouncedPayInvoice = useDebounce(payInvoice, 300);
+
 onMounted(() => {
   loading.value = true;
   fetchInvoiceDetail();
@@ -77,24 +80,26 @@ onMounted(() => {
       </div>
       <hr />
       <h4>信用卡信息</h4>
-      <div class="form-group">
-        <label class="form-label">卡号</label>
-        <input class="form-input" type="text" v-model="cardNumber" placeholder="1234 5678 9012 3456" />
-      </div>
-      <div class="form-group">
-        <label class="form-label">有效期</label>
-        <input class="form-input" type="text" v-model="cardExpiry" placeholder="MM/YY" />
-      </div>
-      <div class="form-group">
-        <label class="form-label">CVC</label>
-        <input class="form-input" type="text" v-model="cardCVC" placeholder="123" />
-      </div>
-      <div class="btn-group">
-        <router-link to="/invoice" class="btn-group-item secondary-btn">返回</router-link>
-        <button type="submit" class="btn-group-item primary-btn" :disabled="isSubmitting" @click="payInvoice">
-          {{ isSubmitting ? '支付中...' : '支付' }}
-        </button>
-      </div>
+      <form @submit.prevent="debouncedPayInvoice">
+        <div class="form-group">
+          <label class="form-label">卡号</label>
+          <input class="form-input" type="text" v-model="cardNumber" placeholder="1234 5678 9012 3456" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">有效期</label>
+          <input class="form-input" type="text" v-model="cardExpiry" placeholder="MM/YY" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">CVC</label>
+          <input class="form-input" type="text" v-model="cardCVC" placeholder="123" required>
+        </div>
+        <div class="btn-group">
+          <router-link to="/invoice" class="btn-group-item secondary-btn">返回</router-link>
+          <button type="submit" class="btn-group-item primary-btn" :disabled="isSubmitting">
+            {{ isSubmitting ? '支付中...' : '支付' }}
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 </template>
