@@ -55,18 +55,25 @@ const selectedStudents = ref([]);
 
 const createCourse = async () => {
   // 校验“年+月”组合唯一性
-  const uniqueSubCourses = new Set(subCourses.value.map(subCourse => `${subCourse.year}-${subCourse.month}`));
+  const uniqueSubCourses = new Set(subCourses.value.map(subCourse => subCourse.month));
   if (uniqueSubCourses.size !== subCourses.value.length) {
     showToast('子课程的年份和月份组合必须唯一', 'error');
     return;
   }
+
+  // 拆分年月
+  const formattedSubCourses = subCourses.value.map(subCourse => {
+    const [year, month] = subCourse.month.split('-');
+    return { year, month };
+  });
+
   let params = {
     course: {
       name: courseName.value,
       unit_fee: courseUnitFee.value,
       teacher_id: courseTeacherId.value,
     },
-    sub_courses: subCourses.value,
+    sub_courses: formattedSubCourses,
     student_ids: selectedStudents.value.map(student => student.id),
   }
   console.log(params);
@@ -80,7 +87,7 @@ const createCourse = async () => {
 
 // 新增方法
 const addSubCourse = () => {
-  subCourses.value.push({ year: '', month: '', fee: 0 });
+  subCourses.value.push({ month: '', fee: 0 });
 };
 
 const removeSubCourse = (index) => {
@@ -126,10 +133,8 @@ onMounted(() => {
         <div class="form-group" v-for="(subCourse, index) in subCourses" :key="index">
           <div class="form-row-title">子课程 {{ index + 1 }}</div>
           <div class="form-row">
-            <label class="form-label">年</label>
-            <input class="form-input" type="number" v-model="subCourse.year" required />
-            <label class="form-label">月</label>
-            <input class="form-input" type="number" v-model="subCourse.month" required />
+            <label class="form-label">年月</label>
+            <input class="form-input month-input" type="month" v-model="subCourse.month" required />
             <button class="red-btn" @click="removeSubCourse(index)">-</button>
           </div>
         </div>
@@ -163,5 +168,12 @@ onMounted(() => {
 
 .form-row-title {
   margin-bottom: 0.5rem;
+}
+
+.month-input {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
 }
 </style>
