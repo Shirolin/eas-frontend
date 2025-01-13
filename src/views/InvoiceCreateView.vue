@@ -25,6 +25,14 @@ const selectedCourse = computed(() => {
   return teacherCourses.value.find(course => course.id === selectedCourseId.value);
 });
 
+const totalFee = computed(() => {
+  return selectedSubCourses.value.reduce((total, subCourse) => total + parseFloat(subCourse.fee), 0).toFixed(2);
+});
+
+const subCourseCount = computed(() => {
+  return selectedSubCourses.value.length;
+});
+
 const createInvoice = async () => {
   if (isSubmitting.value) return;
 
@@ -79,9 +87,9 @@ onMounted(() => {
           <option v-for="course in teacherCourses" :key="course.id" :value="course.id">{{ course.name }}</option>
         </select>
       </div>
-      <hr />
       <!-- 选择子课程 -->
       <div v-if="selectedCourse">
+        <hr />
         <h4>选择子课程</h4>
         <div class="form-group" v-for="subCourse in selectedCourse.sub_courses" :key="subCourse.id">
           <label>
@@ -90,9 +98,9 @@ onMounted(() => {
           </label>
         </div>
       </div>
-      <hr />
       <!-- 选择学生 -->
       <div v-if="selectedCourse">
+        <hr />
         <h4>选择付费学生</h4>
         <div class="form-group">
           <label class="form-label">学生</label>
@@ -102,7 +110,21 @@ onMounted(() => {
           </select>
         </div>
       </div>
-      <hr />
+      <!-- 结算统计栏 -->
+      <div v-if="selectedSubCourses.length > 0">
+        <hr />
+        <h4>结算统计</h4>
+        <div class="summary">
+          <div class="summary-item">
+            <span class="summary-label">子课程数：</span>
+            <span class="summary-value">{{ subCourseCount }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">总费用：</span>
+            <span class="summary-value">{{ totalFee }}</span>
+          </div>
+        </div>
+      </div>
       <div class="btn-group">
         <router-link to="/invoice" class="btn-group-item secondary-btn">返回</router-link>
         <button type="submit" class="btn-group-item primary-btn" :disabled="isSubmitting">
@@ -114,42 +136,11 @@ onMounted(() => {
 </template>
 
 <style lang="less" scoped>
-.form-group {
-  margin-bottom: 1rem;
-}
-
-.form-label {
-  display: block;
-  margin-bottom: 0.5rem;
-}
-
 .form-input,
 select {
   width: 100%;
   padding: 0.5rem;
   border: 1px solid #ccc;
   border-radius: 4px;
-}
-
-.btn-group {
-  display: flex;
-  justify-content: space-between;
-}
-
-.btn-group-item {
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.primary-btn {
-  background-color: #007bff;
-  color: white;
-}
-
-.secondary-btn {
-  background-color: #6c757d;
-  color: white;
 }
 </style>
