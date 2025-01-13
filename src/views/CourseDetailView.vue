@@ -49,6 +49,10 @@ const deleteCourse = async () => {
   await courseStore.deleteCourse(courseId);
 };
 
+const navigateToEditCourse = () => {
+  router.push(`/course/edit/${course.value.id}`);
+};
+
 onMounted(() => {
   loadCourseDetail();
 });
@@ -89,7 +93,7 @@ onMounted(() => {
       <div class="list-detail-actions" v-if="isTeacher">
         <div class="btn-group">
           <router-link to="/course" class="btn-group-item secondary-btn">返回</router-link>
-          <router-link :to="`/course/${course.id}/edit`" class="btn-group-item yellow-btn">编辑</router-link>
+          <button class="btn-group-item yellow-btn" @click="navigateToEditCourse">编辑</button>
           <div class="btn-group-item red-btn" @click="confirmDeleteCourse">删除</div>
         </div>
       </div>

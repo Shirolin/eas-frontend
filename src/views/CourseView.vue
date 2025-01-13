@@ -44,6 +44,10 @@ const confirmDeleteCourse = (courseId) => {
   });
 };
 
+const navigateToEditCourse = (courseId) => {
+  router.push(`/course/edit/${courseId}`);
+};
+
 onMounted(() => {
   loadCourseList();
 });
@@ -76,7 +80,7 @@ onMounted(() => {
           <div class="common-list-actions">
             <router-link :to="`/course/${course.id}`" class="primary-btn">查看详情</router-link>
             <div class="btn-group" v-if="isTeacher">
-              <button class="btn-group-item orange-btn">编辑</button>
+              <button class="btn-group-item orange-btn" @click="navigateToEditCourse(course.id)">编辑</button>
               <button class="btn-group-item red-btn" @click="confirmDeleteCourse(course.id)">删除</button>
             </div>
           </div>

@@ -8,6 +8,7 @@ import CourseDetailView from '@/views/CourseDetailView.vue'
 import InvoiceDetailView from '@/views/InvoiceDetailView.vue'
 import CourseCreateView from '@/views/CourseCreateView.vue'
 import InvoiceCreateView from '@/views/InvoiceCreateView.vue'
+import CourseEditView from '@/views/CourseEditView.vue'
 import { useUserStore } from '@/stores/user'
 
 const router = createRouter({
@@ -64,6 +65,12 @@ const router = createRouter({
       path: '/invoice/create',
       name: 'invoice-create',
       component: InvoiceCreateView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/course/edit/:id',
+      name: 'course-edit',
+      component: CourseEditView,
       meta: { requiresAuth: true },
     },
     {
