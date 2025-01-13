@@ -5,6 +5,7 @@ import { useUserStore } from '@/stores/user'
 import { useCourseStore } from '@/stores/course';
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
 import CommonPagination from '@/components/common/CommonPagination.vue';
+import { useDebounce } from '@/utils/useDebounce';
 
 const userStore = useUserStore()
 const router = useRouter();
@@ -21,13 +22,15 @@ const loadCourses = async (page) => {
   loading.value = false;
 };
 
+const debouncedLoadCourses = useDebounce(loadCourses, 300);
+
 onMounted(() => {
-  loadCourses();
+  debouncedLoadCourses();
 });
 </script>
 <template>
   <div>
-    <div class="page-title">课程</div>
+    <div class="page-title">课程{{ isTeacher ? '管理' : '' }}</div>
     <div class="page-container">
       <!-- 教师用户操作按钮 -->
       <div v-if="isTeacher" class="common-list-top-actions">
@@ -62,7 +65,7 @@ onMounted(() => {
       <div v-else class="common-list-no-data">暂无课程</div>
       <!-- 分页控件 -->
       <CommonPagination v-if="courseStore.courses.length > 0" :currentPage="courseStore.currentPage"
-        :totalPages="courseStore.totalPages" @changePage="loadCourses" />
+        :totalPages="courseStore.totalPages" @changePage="debouncedLoadCourses" />
     </div>
   </div>
 </template>
