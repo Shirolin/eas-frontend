@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/user'
 import { useCourseStore } from '@/stores/course';
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
+import CommonPagination from '@/components/common/CommonPagination.vue';
 
 const userStore = useUserStore()
 const router = useRouter();
@@ -65,12 +66,8 @@ onMounted(() => {
       </ul>
       <div v-else class="no-courses">暂无课程</div>
       <!-- 分页控件 -->
-      <div class="pagination" v-if="courseStore.courses.length > 0">
-        <button @click="loadCourses(courseStore.currentPage - 1)" :disabled="courseStore.currentPage === 1">上一页</button>
-        <span>第 {{ courseStore.currentPage }} 页，共 {{ courseStore.totalPages }} 页</span>
-        <button @click="loadCourses(courseStore.currentPage + 1)"
-          :disabled="courseStore.currentPage === courseStore.totalPages">下一页</button>
-      </div>
+      <CommonPagination v-if="courseStore.courses.length > 0" :currentPage="courseStore.currentPage"
+        :totalPages="courseStore.totalPages" @changePage="loadCourses" />
     </div>
   </div>
 </template>

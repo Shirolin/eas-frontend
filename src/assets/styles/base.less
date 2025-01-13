@@ -458,3 +458,35 @@
   font-size: 24px;
   cursor: pointer;
 }
+
+// pagination styles
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+
+  button {
+    background-color: @primary-color;
+    color: @primary-color-text;
+    border: none;
+    border-radius: 0.25rem;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin: 0 0.5rem;
+
+    &:hover {
+      background-color: @primary-color-hover;
+    }
+
+    &:active {
+      background-color: @primary-color-active;
+    }
+
+    &:disabled {
+      background-color: @secondary-color;
+      cursor: not-allowed;
+    }
+  }
+}
