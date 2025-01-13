@@ -95,7 +95,7 @@ export const useInvoiceStore = defineStore(
         return response.data
       } catch (error) {
         console.error('Failed to get unpaid invoice count:', error)
-        throw error
+        return 0
       }
     }
 
