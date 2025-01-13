@@ -90,11 +90,11 @@ onMounted(() => {
           </li>
         </ul>
       </div>
-      <div class="list-detail-actions" v-if="isTeacher">
+      <div class="list-detail-actions">
         <div class="btn-group">
           <router-link to="/course" class="btn-group-item secondary-btn">返回</router-link>
-          <button class="btn-group-item yellow-btn" @click="navigateToEditCourse">编辑</button>
-          <div class="btn-group-item red-btn" @click="confirmDeleteCourse">删除</div>
+          <button v-if="isTeacher" class="btn-group-item yellow-btn" @click="navigateToEditCourse">编辑</button>
+          <div v-if="isTeacher" class="btn-group-item red-btn" @click="confirmDeleteCourse">删除</div>
         </div>
       </div>
     </div>
