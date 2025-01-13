@@ -12,10 +12,8 @@ const invoiceStore = useInvoiceStore();
 const { showToast } = useToast();
 const invoice = ref({});
 const loading = ref(false);
-const cardNumber = ref('');
-const cardExpiry = ref('');
-const cardCVC = ref('');
 const isSubmitting = ref(false);
+const omisePublicKey = import.meta.env.VITE_OMISE_PUBLIC_KEY
 
 const fetchInvoiceDetail = async () => {
   const invoiceId = route.params.id;
@@ -23,26 +21,40 @@ const fetchInvoiceDetail = async () => {
   loading.value = false;
 };
 
+// 调用Omise支付接口
 const payInvoice = async () => {
   if (isSubmitting.value) return;
 
   isSubmitting.value = true;
 
-  const paymentData = {
-    card_number: cardNumber.value,
-    card_expiry: cardExpiry.value,
-    card_cvc: cardCVC.value,
-  };
+  OmiseCard.configure({
+    publicKey: omisePublicKey
+  });
 
-  try {
-    await invoiceStore.payInvoice(invoice.value.id, paymentData);
-    showToast('账单支付成功', 'success');
-    router.push('/invoice');
-  } catch (error) {
-    showToast('账单支付失败', 'error');
-  } finally {
-    isSubmitting.value = false;
-  }
+  OmiseCard.open({
+    amount: invoice.value.total_amount,
+    currency: "JPY",
+    defaultPaymentMethod: "credit_card",
+    onCreateTokenSuccess: async (nonce) => {
+      if (nonce.startsWith("tokn_")) {
+        console.log("Token created: " + nonce);
+        let params = {
+          omise_token: nonce
+        }
+        try {
+          await invoiceStore.payInvoice(invoice.value.id, params);
+          showToast('账单支付成功', 'success');
+          router.push('/invoice');
+        } catch (error) {
+          showToast('账单支付失败', 'error');
+        } finally {
+          isSubmitting.value = false;
+        }
+      } else {
+        isSubmitting.value = false;
+      }
+    }
+  });
 };
 
 const debouncedPayInvoice = useDebounce(payInvoice, 300);
@@ -78,28 +90,12 @@ onMounted(() => {
           </li>
         </ul>
       </div>
-      <hr />
-      <h4>信用卡信息</h4>
-      <form @submit.prevent="debouncedPayInvoice">
-        <div class="form-group">
-          <label class="form-label">卡号</label>
-          <input class="form-input" type="text" v-model="cardNumber" placeholder="1234 5678 9012 3456" required>
-        </div>
-        <div class="form-group">
-          <label class="form-label">有效期</label>
-          <input class="form-input" type="text" v-model="cardExpiry" placeholder="MM/YY" required>
-        </div>
-        <div class="form-group">
-          <label class="form-label">CVC</label>
-          <input class="form-input" type="text" v-model="cardCVC" placeholder="123" required>
-        </div>
-        <div class="btn-group">
-          <router-link to="/invoice" class="btn-group-item secondary-btn">返回</router-link>
-          <button type="submit" class="btn-group-item primary-btn" :disabled="isSubmitting">
-            {{ isSubmitting ? '支付中...' : '支付' }}
-          </button>
-        </div>
-      </form>
+      <div class="btn-group">
+        <router-link to="/invoice" class="btn-group-item secondary-btn">返回</router-link>
+        <button type="submit" class="btn-group-item primary-btn" :disabled="isSubmitting" @click="debouncedPayInvoice">
+          {{ isSubmitting ? '支付中...' : '支付' }}
+        </button>
+      </div>
     </div>
   </div>
 </template>
