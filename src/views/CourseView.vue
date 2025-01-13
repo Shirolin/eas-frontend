@@ -6,14 +6,17 @@ import { useCourseStore } from '@/stores/course';
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
 import CommonPagination from '@/components/common/CommonPagination.vue';
 import { useDebounce } from '@/utils/useDebounce';
+import { useModalStore } from '@/stores/modalStore';
+import { useToast } from '@/utils/useToast';
 
-const userStore = useUserStore()
+const userStore = useUserStore();
 const router = useRouter();
-console.log(userStore.userData);
 const isTeacher = userStore.isTeacher();
 const courseStore = useCourseStore();
+const modalStore = useModalStore();
+const { showToast } = useToast();
 
-const { fetchCourses, goToPage } = courseStore;
+const { fetchCourses, goToPage, deleteCourse } = courseStore;
 const loading = ref(false);
 
 const loadCourses = async (page) => {
@@ -26,6 +29,19 @@ const debouncedLoadCourses = useDebounce(loadCourses, 300);
 const loadCourseList = () => {
   loading.value = true;
   debouncedLoadCourses();
+};
+
+const confirmDeleteCourse = (courseId) => {
+  modalStore.show({
+    title: '确认删除',
+    content: '确定要删除这门课程吗？',
+    onConfirm: async () => {
+      await deleteCourse(courseId);
+      showToast('课程已删除', 'success');
+      loadCourseList();
+    },
+    onCancel: () => { },
+  });
 };
 
 onMounted(() => {
@@ -60,8 +76,8 @@ onMounted(() => {
           <div class="common-list-actions">
             <router-link :to="`/course/${course.id}`" class="primary-btn">查看详情</router-link>
             <div class="btn-group" v-if="isTeacher">
-              <button class="btn-group-item orange-btn">修改</button>
-              <button class="btn-group-item red-btn">删除</button>
+              <button class="btn-group-item orange-btn">编辑</button>
+              <button class="btn-group-item red-btn" @click="confirmDeleteCourse(course.id)">删除</button>
             </div>
           </div>
         </li>
