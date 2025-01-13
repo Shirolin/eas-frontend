@@ -83,7 +83,7 @@ onMounted(() => {
       <!-- 选择课程 -->
       <div class="form-group">
         <label class="form-label">选择课程</label>
-        <select v-model="selectedCourseId">
+        <select class="styled-select" v-model="selectedCourseId">
           <option v-for="course in teacherCourses" :key="course.id" :value="course.id">{{ course.name }}</option>
         </select>
       </div>
@@ -104,7 +104,7 @@ onMounted(() => {
         <h4>选择付费学生</h4>
         <div class="form-group">
           <label class="form-label">学生</label>
-          <select v-model="selectedStudentId">
+          <select class="styled-select" v-model="selectedStudentId">
             <option v-for="student in selectedCourse.students" :key="student.id" :value="student.id">{{ student.nickname
               }}</option>
           </select>
@@ -136,11 +136,5 @@ onMounted(() => {
 </template>
 
 <style lang="less" scoped>
-.form-input,
-select {
-  width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
+/** */
 </style>
