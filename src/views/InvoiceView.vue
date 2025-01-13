@@ -89,9 +89,9 @@ onMounted(() => {
           <div class="common-list-actions">
             <router-link :to="`/invoice/${invoice.id}`" class="primary-btn">查看详情</router-link>
             <div v-if="invoice.creator_id == userStore.userData.id" class="btn-group">
-              <button v-if="invoice.operation_status.canSend" class="btn-group-item orange-btn"
+              <button v-if="invoice.operation_status.canSend" class="btn-group-item green-btn"
                 @click="confirmSendInvoice(invoice.id)">发送</button>
-              <button v-if="invoice.operation_status.canCancel" class="btn-group-item red-btn"
+              <button v-if="invoice.operation_status.canCancel" class="btn-group-item orange-btn"
                 @click="confirmCancelInvoice(invoice.id)">取消</button>
             </div>
           </div>
