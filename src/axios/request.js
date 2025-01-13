@@ -82,9 +82,12 @@ function handleErrorResponse(response) {
  * 校验报错处理
  */
 function handleValidationError(response) {
-  let msg = Object.values(response.data.message).join('，')
-  showToast(msg, 'error')
-  throw new Error(msg)
+  try {
+    let msg = Object.values(response.data.message).join('，')
+    showToast(msg, 'error')
+  } catch (e) {
+    throw new Error(e)
+  }
 }
 
 /**
