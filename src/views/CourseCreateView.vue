@@ -33,7 +33,6 @@ import { useToast } from '@/utils/useToast';
 import { useDebounce } from '@/utils/useDebounce';
 import CommonPagination from '@/components/common/CommonPagination.vue';
 
-
 // 新增导入
 import { useStudentStore } from '@/stores/student';
 
@@ -104,6 +103,19 @@ const loadStudents = async (page) => {
 
 const debouncedLoadStudents = useDebounce(loadStudents, 300);
 
+const selectStudent = (student) => {
+  if (!selectedStudents.value.includes(student)) {
+    selectedStudents.value.push(student);
+  }
+};
+
+const deselectStudent = (student) => {
+  const index = selectedStudents.value.indexOf(student);
+  if (index > -1) {
+    selectedStudents.value.splice(index, 1);
+  }
+};
+
 onMounted(() => {
   loadStudents();
 });
@@ -142,12 +154,27 @@ onMounted(() => {
       <button class="green-btn" @click="addSubCourse">+</button>
       <hr />
       <!-- 学生选择 -->
-      <div class="form-group">
-        <label class="form-label">选择学生</label>
-        <select class="form-input" v-model="selectedStudents" multiple>
-          <option v-for="student in studentStore.students" :key="student.id" :value="student">{{ student.nickname }}
-          </option>
-        </select>
+      <h4>参与该课程的学生</h4>
+      <div class="student-selection">
+        <div class="student-list">
+          <h5>待选学生</h5>
+          <ul>
+            <li v-for="student in studentStore.students" :key="student.id">
+              <button @click="selectStudent(student)" :class="{ selected: selectedStudents.includes(student) }"
+                :disabled="selectedStudents.includes(student)">
+                {{ student.nickname }}
+              </button>
+            </li>
+          </ul>
+        </div>
+        <div class="student-list">
+          <h5>已选学生</h5>
+          <ul>
+            <li v-for="student in selectedStudents" :key="student.id">
+              <button @click="deselectStudent(student)">{{ student.nickname }}</button>
+            </li>
+          </ul>
+        </div>
       </div>
       <CommonPagination v-if="studentStore.students.length > 0" :currentPage="studentStore.currentPage"
         :totalPages="studentStore.totalPages" @changePage="debouncedLoadStudents" />
@@ -175,5 +202,48 @@ onMounted(() => {
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 1rem;
+}
+
+.student-selection {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.student-list {
+  flex: 1;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+}
+
+.student-list h5 {
+  margin-bottom: 10px;
+}
+
+.student-list ul {
+  list-style: none;
+  padding: 0;
+}
+
+.student-list li {
+  margin-bottom: 5px;
+}
+
+.student-list button {
+  width: 100%;
+  padding: 5px;
+  border: none;
+  background-color: #f0f0f0;
+  cursor: pointer;
+}
+
+.student-list button:hover {
+  background-color: #e0e0e0;
+}
+
+.student-list button.selected {
+  background-color: #d0d0d0;
+  cursor: not-allowed;
 }
 </style>
