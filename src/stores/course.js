@@ -41,7 +41,7 @@ export const useCourseStore = defineStore(
     const createCourse = async (courseData) => {
       try {
         const response = await request.post('/api/courses', courseData)
-        courses.value.push(response.data)
+        // courses.value.push(response.data)
       } catch (error) {
         console.error('Failed to create course:', error)
       }

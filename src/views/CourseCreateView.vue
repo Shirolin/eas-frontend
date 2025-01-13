@@ -15,7 +15,9 @@ import { ref } from 'vue';
 import { useUserStore } from '@/stores/user';
 import { useCourseStore } from '@/stores/course';
 import { useRouter } from 'vue-router';
+import { useToast } from '@/utils/useToast';
 
+const { showToast } = useToast();
 const router = useRouter();
 const userStore = useUserStore();
 const courseStore = useCourseStore();
@@ -35,6 +37,7 @@ const createCourse = async () => {
   }
   console.log(params);
   await courseStore.createCourse(params).then(() => {
+    showToast('创建成功', 'success');
     router.push('/course');
   });
   // 跳转到课程列表页面
