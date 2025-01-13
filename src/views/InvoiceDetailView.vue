@@ -1,26 +1,3 @@
-<!-- CREATE TABLE "public"."invoices" (
-  "id" int8 NOT NULL DEFAULT nextval('invoices_id_seq'::regclass),
-  "invoice_no" varchar(20) COLLATE "pg_catalog"."default" NOT NULL,
-  "course_id" int4 NOT NULL,
-  "student_id" int4 NOT NULL,
-  "creator_id" int4 NOT NULL,
-  "total_amount" numeric(10,2) NOT NULL,
-  "currency" varchar(10) COLLATE "pg_catalog"."default" NOT NULL DEFAULT 'CNY'::character varying,
-  "status" int2 NOT NULL,
-  "created_at" timestamp(0),
-  "updated_at" timestamp(0),
-  CONSTRAINT "invoices_pkey" PRIMARY KEY ("id"),
-  CONSTRAINT "invoices_invoice_no_unique" UNIQUE ("invoice_no")
-);
-CREATE TABLE "public"."invoice_items" (
-  "id" int8 NOT NULL DEFAULT nextval('invoice_items_id_seq'::regclass),
-  "invoice_id" int4 NOT NULL,
-  "sub_course_id" int4 NOT NULL,
-  "amount" numeric(10,2) NOT NULL,
-  "created_at" timestamp(0),
-  "updated_at" timestamp(0),
-  CONSTRAINT "invoice_items_pkey" PRIMARY KEY ("id")
-); -->
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';

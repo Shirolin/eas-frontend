@@ -1,29 +1,3 @@
-<!--
- CREATE TABLE "public"."courses" (
-  "id" int8 NOT NULL DEFAULT nextval('courses_id_seq'::regclass),
-  "teacher_id" int4 NOT NULL,
-  "teacher_nickname" varchar(255) COLLATE "pg_catalog"."default" NOT NULL,
-  "name" varchar(255) COLLATE "pg_catalog"."default" NOT NULL,
-  "unit_fee" numeric(10,2) NOT NULL,
-  "status" int2 NOT NULL,
-  "created_at" timestamp(0),
-  "updated_at" timestamp(0),
-  CONSTRAINT "courses_pkey" PRIMARY KEY ("id"),
-  CONSTRAINT "courses_teacher_id_name_unique" UNIQUE ("teacher_id", "name")
-);
-
-CREATE TABLE "public"."sub_courses" (
-  "id" int8 NOT NULL DEFAULT nextval('sub_courses_id_seq'::regclass),
-  "course_id" int4 NOT NULL,
-  "year" int4 NOT NULL,
-  "month" int4 NOT NULL,
-  "fee" numeric(10,2) NOT NULL,
-  "created_at" timestamp(0),
-  "updated_at" timestamp(0),
-  CONSTRAINT "sub_courses_pkey" PRIMARY KEY ("id"),
-  CONSTRAINT "sub_courses_course_id_year_month_unique" UNIQUE ("course_id", "year", "month")
-)
--->
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useUserStore } from '@/stores/user';
@@ -32,15 +6,12 @@ import { useRouter } from 'vue-router';
 import { useToast } from '@/utils/useToast';
 import { useDebounce } from '@/utils/useDebounce';
 import CommonPagination from '@/components/common/CommonPagination.vue';
-
-// 新增导入
 import { useStudentStore } from '@/stores/student';
 
 const { showToast } = useToast();
 const router = useRouter();
 const userStore = useUserStore();
 const courseStore = useCourseStore();
-// 新增学生仓库
 const studentStore = useStudentStore();
 
 const courseName = ref('');
@@ -91,7 +62,6 @@ const createCourse = async () => {
   });
 };
 
-// 新增方法
 const addSubCourse = () => {
   subCourses.value.push({ month: '', fee: 0 });
 };
