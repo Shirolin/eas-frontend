@@ -59,13 +59,16 @@ export const useInvoiceStore = defineStore(
       }
     }
 
-    // 删除账单
-    const deleteInvoice = async (invoiceId) => {
+    // 取消账单
+    const cancelInvoice = async (invoiceId) => {
       try {
-        await request.delete(`/api/invoices/${invoiceId}`)
-        invoices.value = invoices.value.filter((invoice) => invoice.id !== invoiceId)
+        await request.post(`/api/invoices/${invoiceId}/cancel`)
+        const index = invoices.value.findIndex((invoice) => invoice.id === invoiceId)
+        if (index !== -1) {
+          invoices.value[index].status = 'cancelled'
+        }
       } catch (error) {
-        console.error('Failed to delete invoice:', error)
+        console.error('Failed to cancel invoice:', error)
       }
     }
 
@@ -97,7 +100,7 @@ export const useInvoiceStore = defineStore(
       fetchInvoice,
       createInvoice,
       updateInvoice,
-      deleteInvoice,
+      cancelInvoice,
       sendInvoice,
     }
   },
