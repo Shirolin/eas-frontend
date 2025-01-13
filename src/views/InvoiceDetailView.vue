@@ -100,15 +100,16 @@ onMounted(() => {
     </div>
     <div v-else>
       <h2>账单号：{{ invoice.invoice_no }}</h2>
-      <p>描述：{{ invoice.description }}</p>
       <div class="list-details">
-        <span>客户: {{ invoice.customer_name }}</span>
+        <span>用户: {{ invoice.student_name }}</span>
+        <span>课程: {{ invoice.course_name }}</span>
         <span>金额: {{ invoice.total_amount }}</span>
-        <span>日期: {{ invoice.created_at }}</span>
         <span>状态: {{ invoice.status_name }}</span>
+        <span>创建者: {{ invoice.creator_name }}</span>
+        <span>日期: {{ invoice.created_at }}</span>
       </div>
       <div v-if="invoice.items && invoice.items.length > 0" class="invoice-items">
-        <h4>账单明细</h4>
+        <h4>账单明细: {{ invoice.items.length }}项</h4>
         <ul>
           <li v-for="item in invoice.items" :key="item.id">
             <span>子课程: {{ item.sub_course_name }}</span>
