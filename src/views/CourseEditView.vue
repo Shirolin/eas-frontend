@@ -28,8 +28,7 @@ const fetchCourseDetail = async () => {
   courseName.value = course.name;
   courseUnitFee.value = course.unit_fee;
   subCourses.value = course.sub_courses.map(subCourse => ({
-    month: `${subCourse.year}-${String(subCourse.month).padStart(2, '0')}`,
-    fee: subCourse.fee,
+    month: `${subCourse.year}-${String(subCourse.month).padStart(2, '0')}`
   }));
   selectedStudents.value = course.students;
 };
@@ -127,7 +126,6 @@ onMounted(() => {
           <div class="form-row">
             <label class="form-label">年月</label>
             <input class="form-input month-input" type="month" v-model="subCourse.month" required />
-            <input class="form-input" type="number" v-model="subCourse.fee" required />
             <button class="red-btn" @click="removeSubCourse(index)">-</button>
           </div>
         </div>
