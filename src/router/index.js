@@ -38,6 +38,10 @@ const router = createRouter({
       component: InvoiceView,
       meta: { requiresAuth: true },
     },
+    {
+      path: '/:pathMatch(.*)*',
+      redirect: '/',
+    },
   ],
 })
 
