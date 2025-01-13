@@ -57,8 +57,8 @@ onMounted(() => {
           <div class="course-actions">
             <router-link :to="`/course/${course.id}`" class="primary-btn">查看详情</router-link>
             <div class="btn-group" v-if="isTeacher">
-              <button class="edit-button">修改</button>
-              <button class="delete-button">删除</button>
+              <button class="orange-btn">修改</button>
+              <button class="red-btn">删除</button>
             </div>
           </div>
         </li>
