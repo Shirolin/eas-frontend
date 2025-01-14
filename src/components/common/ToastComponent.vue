@@ -68,7 +68,7 @@ defineExpose({ show });
 <style scoped lang="less">
 .toast {
   position: fixed;
-  bottom: 10rem;
+  bottom: 4rem;
   left: 50%;
   transform: translateX(-50%);
   background-color: rgba(0, 0, 0, 0.7);
