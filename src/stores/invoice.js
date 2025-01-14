@@ -39,7 +39,7 @@ export const useInvoiceStore = defineStore(
         totalPages.value = response.data.last_page
       } catch (error) {
         console.error('Failed to fetch invoices:', error)
-        throw error
+        return Promise.reject(error)
       }
     }
 
@@ -51,7 +51,7 @@ export const useInvoiceStore = defineStore(
         return response.data
       } catch (error) {
         console.error('Failed to fetch invoice:', error)
-        throw error
+        return Promise.reject(error)
       }
     }
 
@@ -62,7 +62,7 @@ export const useInvoiceStore = defineStore(
         await request.post('/api/invoices', invoiceData)
       } catch (error) {
         console.error('Failed to create invoice:', error)
-        throw error
+        return Promise.reject(error)
       }
     }
 
@@ -73,7 +73,7 @@ export const useInvoiceStore = defineStore(
         await request.post(`/api/invoices/${invoiceId}/cancel`)
       } catch (error) {
         console.error('Failed to cancel invoice:', error)
-        throw error
+        return Promise.reject(error)
       }
     }
 
@@ -84,7 +84,7 @@ export const useInvoiceStore = defineStore(
         await request.post(`/api/invoices/${invoiceId}/send`)
       } catch (error) {
         console.error('Failed to send invoice:', error)
-        throw error
+        return Promise.reject(error)
       }
     }
 
@@ -105,7 +105,7 @@ export const useInvoiceStore = defineStore(
         await request.post(`/api/my/invoices/${invoiceId}/pay`, params)
       } catch (error) {
         console.error('Failed to pay invoice:', error)
-        throw error
+        return Promise.reject(error)
       }
     }
 
