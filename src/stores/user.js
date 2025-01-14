@@ -2,7 +2,6 @@ import { ref, reactive } from 'vue'
 import { defineStore } from 'pinia'
 import request from '@/axios/request.js'
 import router from '@/router/index.js'
-import { useToast } from '@/utils/useToast'
 
 export const useUserStore = defineStore(
   'user',
@@ -19,8 +18,6 @@ export const useUserStore = defineStore(
     const token = ref(localStorage.getItem('token') || null)
     const isRemember = ref()
 
-    const { showToast } = useToast()
-
     // Passport 配置，从环境变量中获取
     const vite_passport_config = {
       grant_type: import.meta.env.VITE_PASSPORT_GRANT_TYPE,
@@ -31,22 +28,26 @@ export const useUserStore = defineStore(
 
     // 登录
     async function login(data) {
-      const params = { username: data.username, password: data.password, ...vite_passport_config }
-      const response = await request.post('/api/auth/login', params)
+      try {
+        const params = { username: data.username, password: data.password, ...vite_passport_config }
+        const response = await request.post('/api/auth/login', params)
 
-      Object.assign(resp_login, response)
-      token.value = resp_login.data.access_token
-      isRemember.value = data.rememberMe
+        Object.assign(resp_login, response)
+        token.value = resp_login.data.access_token
+        isRemember.value = data.rememberMe
 
-      if (token.value) {
-        localStorage.setItem('token', token.value)
-        if (localStorage.getItem('token') != null) {
-          await getUserInfo()
+        if (token.value) {
+          localStorage.setItem('token', token.value)
+          if (localStorage.getItem('token') != null) {
+            await getUserInfo()
+          }
+          console.log({ msg: '登录成功', token: token.value, userData })
+          setTimeout(() => {
+            router.push({ path: '/' })
+          }, 1000)
         }
-        console.log({ msg: '登录成功', token: token.value, userData })
-        setTimeout(() => {
-          router.push({ path: '/' })
-        }, 1000)
+      } catch (error) {
+        console.log({ msg: '登录失败', error })
       }
     }
 
@@ -58,6 +59,7 @@ export const useUserStore = defineStore(
         if (error.status == 401) {
           clear()
         }
+        console.log({ msg: '退出登录失败', error })
       }
     }
 
@@ -69,6 +71,9 @@ export const useUserStore = defineStore(
         Object.assign(resp_getUserInfo, res)
         Object.assign(userData, resp_getUserInfo.data)
       } catch (error) {
+        if (error.status == 401) {
+          clear()
+        }
         console.log({ msg: '获取用户信息失败', error })
       }
     }
