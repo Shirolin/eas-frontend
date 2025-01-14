@@ -59,17 +59,16 @@ const createInvoice = async () => {
     student_id: selectedStudentId.value,
   };
 
-  try {
-    await invoiceStore.createInvoice(params);
+  await invoiceStore.createInvoice(params).then(() => {
     showToast('账单创建成功', 'success');
     setTimeout(() => {
       router.push('/invoice');
-    }, 3000);
-  } catch (error) {
-    showToast('账单创建失败，请重试', 'error');
-  } finally {
+    }, 1000);
+  }).catch((error) => {
+    showToast(`账单创建失败: ${error.message}`, 'error');
+  }).finally(() => {
     isSubmitting.value = false;
-  }
+  });
 };
 
 const selectSubCourse = (subCourse) => {
