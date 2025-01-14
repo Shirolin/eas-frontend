@@ -36,9 +36,12 @@ const confirmDeleteCourse = (courseId) => {
     title: '确认删除',
     content: '确定要删除这门课程吗？',
     onConfirm: async () => {
-      await deleteCourse(courseId);
-      showToast('课程已删除', 'success');
-      loadCourseList();
+      await deleteCourse(courseId).then(() => {
+        showToast('课程已删除', 'success');
+        loadCourseList();
+      }).catch((error) => {
+        showToast(error.message, 'error');
+      });
     },
     onCancel: () => { },
   });
