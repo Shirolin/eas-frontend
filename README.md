@@ -24,12 +24,10 @@ BAS后台管理系统地址：[BAS后台管理系统](https://github.com/Shiroli
 
 - Node.js = 18.20.5 +
 - npm = 10.8.2 +
-- vue = 3.5.0 +
-- vite = 6.0.0 +
 
 # 开发环境部署/安装
 
-本项目代码使用 vite + Vue3 + JavaScript 开发。
+本项目代码使用 vite + Vue3 + pinia + JavaScript 开发。
 
 ### 基础安装
 
@@ -98,5 +96,9 @@ npm run build
 | pinia                       | Vue 3 的状态管理库                    | 前端状态管理   |
 | pinia-plugin-persistedstate | Pinia 的持久化插件                    | 前端状态持久化 |
 | serve                       | 静态文件服务器                        | 线上部署服务器 |
-| date-fns                    | 日期处理工具库                        | 日期处理       |
+| date-fns                    | 日期处理工具库                        | 日期时区处理   |
 | @heroicons/vue              | Heroicons 的 Vue 组件库               | 图标库         |
+
+# 备注
+
+- 本项目除了日期扩处理扩展包 `date-fns` 外，和图标库以外，没有使用其他的 UI 库，所有的 UI 组件都是自己写的，包括modal、toast、loadingSpinner、pagination、scrollToTop、debounce等等。
