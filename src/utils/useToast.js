@@ -1,5 +1,5 @@
 import { createApp, ref } from 'vue'
-import Toast from '@/components/ToastComponent.vue'
+import Toast from '@/components/common/ToastComponent.vue'
 
 export function useToast() {
   const toastInstance = ref(null)
