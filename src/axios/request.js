@@ -49,7 +49,7 @@ request.interceptors.response.use(
       }
       if (error.response.status === 422) {
         // 处理表单校验错误
-        const errors = error.response.data.errors
+        const errors = error.response.data.message
         if (errors) {
           errorMessage = Object.values(errors).flat().join('，')
         }
