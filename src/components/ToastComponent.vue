@@ -79,6 +79,9 @@ defineExpose({ show });
   display: flex;
   align-items: center;
   white-space: nowrap;
+  max-width: 90%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
   &.success {
     background-color: rgba(0, 128, 0, 0.7);
