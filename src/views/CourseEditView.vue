@@ -75,7 +75,7 @@ const updateCourse = async () => {
       router.push('/course');
     }, 1000);
   }).catch((error) => {
-    showToast('更新失败', 'error');
+    showToast('更新失败:' + error.message, 'error');
     console.error(error);
   }).finally(() => {
     isSubmitting.value = false;
