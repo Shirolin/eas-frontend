@@ -27,15 +27,20 @@ const isSubmitting = ref(false);
 const loading = ref(true);
 
 const fetchCourseDetail = async () => {
-  const course = await courseStore.fetchCourse(courseId);
-  courseName.value = course.name;
-  courseUnitFee.value = course.unit_fee;
-  subCourses.value = course.sub_courses.map(subCourse => ({
-    month: `${subCourse.year}-${String(subCourse.month).padStart(2, '0')}`,
-    fee: subCourse.fee,
-  }));
-  selectedStudents.value = course.students;
-  loading.value = false;
+  try {
+    const course = await courseStore.fetchCourse(courseId);
+    courseName.value = course.name;
+    courseUnitFee.value = course.unit_fee;
+    subCourses.value = course.sub_courses.map(subCourse => ({
+      month: `${subCourse.year}-${String(subCourse.month).padStart(2, '0')}`,
+      fee: subCourse.fee,
+    }));
+    selectedStudents.value = course.students;
+  } catch (error) {
+    showToast('获取课程详情失败', 'error');
+  } finally {
+    loading.value = false;
+  }
 };
 
 const updateCourse = async () => {
@@ -68,7 +73,10 @@ const updateCourse = async () => {
     showToast('更新成功', 'success');
     setTimeout(() => {
       router.push('/course');
-    }, 3000);
+    }, 1000);
+  }).catch((error) => {
+    showToast('更新失败', 'error');
+    console.error(error);
   }).finally(() => {
     isSubmitting.value = false;
   });
