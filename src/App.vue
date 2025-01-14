@@ -1,7 +1,7 @@
 <script setup>
 import { useRoute } from 'vue-router';
 import HeaderLayout from './components/layouts/HeaderLayout.vue';
-import ModalComponent from './components/ModalComponent.vue';
+import ModalComponent from './components/common/ModalComponent.vue';
 import ScrollToTopButton from './components/ScrollToTopButton.vue';
 import TransitionWrapper from './components/TransitionWrapper.vue';
 
