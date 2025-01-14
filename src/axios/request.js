@@ -1,9 +1,6 @@
 import axios from 'axios'
 import router from '@/router/index.js'
 import { useUserStore } from '@/stores/user'
-import { useToast } from '@/utils/useToast'
-
-const { showToast } = useToast()
 
 // 创建axios实例
 const request = axios.create({
@@ -35,60 +32,48 @@ request.interceptors.response.use(
     return response.data
   },
   (error) => {
+    let errorMessage = '系统错误'
     if (error.response) {
-      handleErrorResponse(error.response)
+      // 服务器返回了错误响应
+      errorMessage =
+        error.response.data?.message ||
+        error.response.data?.error ||
+        `HTTP Error ${error.response.status}`
+      if (error.response.status === 401) {
+        if (error.response.data.data.isLogin) {
+          errorMessage = error.response.data.message
+        } else {
+          // 处理 token 过期等情况，例如跳转到登录页面
+          router.push('/login')
+        }
+      }
+      if (error.response.status === 422) {
+        // 处理表单校验错误
+        const errors = error.response.data.errors
+        if (errors) {
+          errorMessage = Object.values(errors).flat().join('，')
+        }
+      }
+      if (error.response.status === 404) {
+        errorMessage = '请求的资源不存在'
+      }
+      if (error.response.status === 500) {
+        errorMessage = '服务器内部错误'
+      }
+    } else if (error.request) {
+      errorMessage = '请求发送失败，请检查网络连接'
     } else {
-      showToast('网络错误，请稍后重试', 'error')
+      errorMessage = error.message
     }
-    return Promise.reject(error)
+
+    // 将错误信息包装成统一的格式
+    const formattedError = {
+      message: errorMessage,
+      status: error.response?.status,
+    }
+
+    return Promise.reject(formattedError)
   },
 )
-
-/**
- * 处理错误响应
- * @param {*} response
- */
-function handleErrorResponse(response) {
-  switch (response.status) {
-    case 401:
-      handleUnauthorized(response)
-      break
-    case 404:
-      showToast('请求资源不存在', 'error')
-      break
-    case 422:
-      handleValidationError(response)
-      break
-    default:
-      showToast('服务器异常', 'error')
-  }
-}
-
-/**
- * 校验报错处理
- */
-function handleValidationError(response) {
-  try {
-    let msg = Object.values(response.data.message).join('，')
-    showToast(msg, 'error')
-  } catch (e) {
-    console.error('Validation error:', e)
-  }
-}
-
-/**
- * 处理未授权
- */
-function handleUnauthorized(response) {
-  if (response.data.data.isLogin) {
-    showToast(response.data.message, 'error')
-  } else {
-    showToast('未授权', 'error')
-    if (!store) store = useUserStore()
-    store.token = null
-    store.userData = {}
-    router.push('/login')
-  }
-}
 
 export default request
