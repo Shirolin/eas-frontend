@@ -36,6 +36,21 @@ const subCourseCount = computed(() => {
 const createInvoice = async () => {
   if (isSubmitting.value) return;
 
+  if (!selectedCourseId.value) {
+    showToast('请选择课程', 'error');
+    return;
+  }
+
+  if (selectedSubCourses.value.length === 0) {
+    showToast('请选择子课程', 'error');
+    return;
+  }
+
+  if (!selectedStudentId.value) {
+    showToast('请选择学生', 'error');
+    return;
+  }
+
   isSubmitting.value = true;
 
   let params = {
@@ -44,31 +59,23 @@ const createInvoice = async () => {
     student_id: selectedStudentId.value,
   };
 
-  await invoiceStore.createInvoice(params).then(() => {
+  try {
+    await invoiceStore.createInvoice(params);
     showToast('账单创建成功', 'success');
     setTimeout(() => {
       router.push('/invoice');
     }, 3000);
-  }).finally(() => {
+  } catch (error) {
+    showToast('账单创建失败，请重试', 'error');
+  } finally {
     isSubmitting.value = false;
-  });
+  }
 };
 
 const selectSubCourse = (subCourse) => {
   if (!selectedSubCourses.value.some(sc => sc.id === subCourse.id)) {
     selectedSubCourses.value.push(subCourse);
   }
-};
-
-const deselectSubCourse = (subCourse) => {
-  const index = selectedSubCourses.value.findIndex(sc => sc.id === subCourse.id);
-  if (index > -1) {
-    selectedSubCourses.value.splice(index, 1);
-  }
-};
-
-const selectStudent = (studentId) => {
-  selectedStudentId.value = studentId;
 };
 
 const handleCourseChange = () => {
