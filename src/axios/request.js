@@ -59,9 +59,6 @@ function handleErrorResponse(response) {
     case 422:
       handleValidationError(response)
       break
-    case 500:
-      showToast('服务器异常', 'error')
-      break
     default:
       showToast('服务器异常', 'error')
   }
