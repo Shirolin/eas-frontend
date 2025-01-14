@@ -45,9 +45,15 @@ const confirmCancelInvoice = () => {
     title: '确认取消',
     content: '确定要取消这张账单吗？',
     onConfirm: async () => {
-      await cancelInvoice();
-      showToast('账单已取消', 'success');
-      router.push('/invoice');
+      await cancelInvoice().then(() => {
+        showToast('账单已取消', 'success');
+        setTimeout(() => {
+          router.push('/invoice');
+        }, 1000);
+        router.push('/invoice');
+      }).catch((error) => {
+        showToast(error.message, 'error');
+      });
     },
     onCancel: () => { },
   });
@@ -63,9 +69,14 @@ const confirmSendInvoice = () => {
     title: '确认发送',
     content: '确定要发送这张账单吗？',
     onConfirm: async () => {
-      await sendInvoice();
-      showToast('账单已发送', 'success');
-      router.push('/invoice');
+      await sendInvoice().then(() => {
+        showToast('账单已发送', 'success');
+        setTimeout(() => {
+          router.push('/invoice');
+        }, 1000);
+      }).catch((error) => {
+        showToast(error.message, 'error');
+      });
     },
     onCancel: () => { },
   });
