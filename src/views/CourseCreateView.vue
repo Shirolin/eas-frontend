@@ -56,7 +56,9 @@ const createCourse = async () => {
     showToast('创建成功', 'success');
     setTimeout(() => {
       router.push('/course');
-    }, 3000);
+    }, 1000);
+  }).catch((error) => {
+    showToast(`创建失败: ${error.message}`, 'error');
   }).finally(() => {
     isSubmitting.value = false;
   });
