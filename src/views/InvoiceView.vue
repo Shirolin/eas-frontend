@@ -43,9 +43,12 @@ const confirmCancelInvoice = (invoiceId) => {
     title: '确认取消',
     content: '确定要取消这张账单吗？',
     onConfirm: async () => {
-      await cancelInvoice(invoiceId);
-      showToast('账单已取消', 'success');
-      loadInvoices(invoiceStore.currentPage);
+      await cancelInvoice(invoiceId).then(() => {
+        showToast('账单已取消', 'success');
+        loadInvoices(invoiceStore.currentPage);
+      }).catch((error) => {
+        showToast(error.message, 'error');
+      });
     },
     onCancel: () => { },
   });
@@ -56,9 +59,12 @@ const confirmSendInvoice = (invoiceId) => {
     title: '确认发送',
     content: '确定要发送这张账单吗？',
     onConfirm: async () => {
-      await sendInvoice(invoiceId);
-      showToast('账单已发送', 'success');
-      loadInvoices(invoiceStore.currentPage);
+      await sendInvoice(invoiceId).then(() => {
+        showToast('账单已发送', 'success');
+        loadInvoices(invoiceStore.currentPage);
+      }).catch((error) => {
+        showToast(error.message, 'error');
+      });
     },
     onCancel: () => { },
   });
