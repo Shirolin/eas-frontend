@@ -20,8 +20,11 @@ const loading = ref(false);
 
 const fetchCourseDetail = async () => {
   const courseId = route.params.id;
-  course.value = await courseStore.fetchCourse(courseId);
-  loading.value = false;
+  course.value = await courseStore.fetchCourse(courseId).catch((error) => {
+    showToast(error.message, 'error');
+  }).finally(() => {
+    loading.value = false;
+  });
 };
 
 const debouncedFetchCourseDetail = useDebounce(fetchCourseDetail, 300);
@@ -36,9 +39,14 @@ const confirmDeleteCourse = () => {
     title: '确认删除',
     content: '确定要删除这门课程吗？',
     onConfirm: async () => {
-      await deleteCourse();
-      showToast('课程已删除', 'success');
-      router.push('/course');
+      await deleteCourse().then(() => {
+        showToast('课程已删除', 'success');
+        setTimeout(() => {
+          router.push('/course');
+        }, 1000)
+      }).catch((error) => {
+        showToast(error.message, 'error');
+      });
     },
     onCancel: () => { },
   });
