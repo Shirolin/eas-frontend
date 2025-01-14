@@ -101,4 +101,4 @@ npm run build
 
 # 备注
 
-- 本项目除了日期扩处理扩展包 `date-fns` 外，和图标库以外，没有使用其他的 UI 库，所有的 UI 组件都是自己写的，包括modal、toast、loadingSpinner、pagination、scrollToTop、debounce等等。
+- 本项目除了日期扩处理扩展包 `date-fns` 和图标库以外，没有使用其他的 UI 库，所有的 UI 组件都是自己写的，包括modal、toast、loadingSpinner、pagination、scrollToTop、debounce等等。
