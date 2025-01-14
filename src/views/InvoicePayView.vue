@@ -17,8 +17,11 @@ const omisePublicKey = import.meta.env.VITE_OMISE_PUBLIC_KEY
 
 const fetchInvoiceDetail = async () => {
   const invoiceId = route.params.id;
-  invoice.value = await invoiceStore.fetchInvoice(invoiceId);
-  loading.value = false;
+  invoice.value = await invoiceStore.fetchInvoice(invoiceId).catch((error) => {
+    showToast(error.message, 'error');
+  }).finally(() => {
+    loading.value = false;
+  });
 };
 
 // 调用Omise支付接口
@@ -41,15 +44,14 @@ const payInvoice = async () => {
         let params = {
           omise_token: nonce
         }
-        try {
-          await invoiceStore.payInvoice(invoice.value.id, params);
+        await invoiceStore.payInvoice(invoice.value.id, params).then(() => {
           showToast('账单支付成功', 'success');
           router.push('/invoice');
-        } catch (error) {
-          showToast('账单支付失败', 'error');
-        } finally {
+        }).catch((error) => {
+          showToast('账单支付失败:' + error.message, 'error');
+        }).finally(() => {
           isSubmitting.value = false;
-        }
+        });
       } else {
         isSubmitting.value = false;
       }
