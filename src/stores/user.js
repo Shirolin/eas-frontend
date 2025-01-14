@@ -48,7 +48,7 @@ export const useUserStore = defineStore(
         }
       } catch (error) {
         console.log({ msg: '登录失败', error })
-        throw error
+        return Promise.reject(error)
       }
     }
 
@@ -61,7 +61,7 @@ export const useUserStore = defineStore(
           clear()
         }
         console.log({ msg: '退出登录失败', error })
-        throw error
+        return Promise.reject(error)
       }
     }
 
@@ -77,7 +77,7 @@ export const useUserStore = defineStore(
           clear()
         }
         console.log({ msg: '获取用户信息失败', error })
-        throw error
+        return Promise.reject(error)
       }
     }
 
