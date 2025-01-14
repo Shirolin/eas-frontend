@@ -1,11 +1,12 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
+import throttle from 'lodash/throttle';
 
 const showScrollButton = ref(false);
 
-const handleScroll = () => {
+const handleScroll = throttle(() => {
   showScrollButton.value = window.scrollY > 200;
-};
+}, 200);
 
 const scrollToTop = () => {
   window.scrollTo({ top: 0, behavior: 'smooth' });
