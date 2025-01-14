@@ -39,6 +39,9 @@ const handleSubmit = async () => {
 
   await userStore.login(loginParams).then(() => {
     showToast('登录成功', 'success');
+  }).catch((error) => {
+    errorMessage.value = error.message || '登录失败，请重试';
+    showToast(errorMessage.value, 'error');
   }).finally(() => {
     isSubmitting.value = false;
   });
